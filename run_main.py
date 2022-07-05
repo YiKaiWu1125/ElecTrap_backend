@@ -6,6 +6,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
+camera_id = 0
 re = 1
 x = -100.0
 y = -100.0 
@@ -15,6 +16,9 @@ sta = 0
 st = "Ready"
 betime = 0
 endtime = 0
+run = 0
+run_val = 1
+up_down_range = 100
 
 ## For static images:
 #IMAGE_FILES = []
@@ -58,7 +62,7 @@ endtime = 0
 #        hand_world_landmarks, mp_hands.HAND_CONNECTIONS, azimuth=5)
 
 # For webcam input:
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(camera_id)
 with mp_hands.Hands(
     max_num_hands=1,
     model_complexity=0,
@@ -95,17 +99,17 @@ with mp_hands.Hands(
         re = 0
         x = -100.0
         y = -100.0
-    if(sta == 0 and x>=50 and x <= 100 and y >= 150 and y<= 200):
+    if(sta == 0 and x>=50 and x <= 100 and y >= 150+run and y<= 200+run):
         sta = 1
         if(betime == 0):
             betime = time.time()
             st="begin"
         ss ="begin"
-    if(sta == 1 and x>=550 and x <= 600 and y >= 150 and y<= 200):
+    if(sta == 1 and x>=550 and x <= 600 and y >= 150+run and y<= 200+run):
         sta = 2
         endtime = time.time()
         st = "succesful"
-    if(sta == 1 and not(x>=50 and x <= 600 and y >= 150 and y<= 200)):
+    if(sta == 1 and not(x>=50 and x <= 600 and y >= 150+run and y<= 200+run)):
         sta = 0
         print("-----------------------error x:"+str(x)+" y:"+str(y)+"--------------")
         ss = "Fail <again>"
@@ -152,11 +156,14 @@ with mp_hands.Hands(
       pass
     
     if(sta != 2):
-        cv2.rectangle(image,(50,150),(600,200),(0,0,255),5)   # 畫出觸碰區
+        cv2.rectangle(image,(50,150+run),(600,200+run),(0,0,255),5)   # 畫出觸碰區
     if(sta == 0 ):
-        cv2.rectangle(image,(50,150),(100,200),(0,255,0),5)   # 畫出觸碰區
+        cv2.rectangle(image,(50,150+run),(100,200+run),(0,255,0),5)   # 畫出觸碰區
     if(sta == 1 ):
-        cv2.rectangle(image,(550,150),(600,200),(255,255,0),5)   # 畫出觸碰區
+        run += run_val
+        if(run > up_down_range or run < up_down_range*-1):
+          run_val= run_val*-1
+        cv2.rectangle(image,(550,150+run),(600,200+run),(255,255,0),5)   # 畫出觸碰區
     if(sta == 2):
         cv2.putText(image, "score:"+str(int(endtime-betime))+" s.",(0,250), cv2.FONT_HERSHEY_PLAIN, 5, (260,25,240), 3)
         cv2.putText(image, "<Game over>",(0,350), cv2.FONT_HERSHEY_PLAIN, 5, (260,25,240), 3)
