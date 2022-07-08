@@ -6,7 +6,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-camera_id = "test_video.mp4"
+camera_id = "try_video.mp4"
 re = 1
 x = -100.0
 y = -100.0 
