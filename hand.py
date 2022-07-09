@@ -6,7 +6,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-camera_id = 1
+camera_id = 0
 re = 1
 x = -100.0
 y = -100.0 
@@ -74,9 +74,8 @@ with mp_hands.Hands(
       print("Ignoring empty camera frame.")
       # If loading a video, use 'break' instead of 'continue'.
       continue
-
-    #img = cv2.resize(image,(650,450))  # 調整畫面尺寸
-    img = image
+    #img = image
+    img = cv2.resize(image,(640,480))  # 調整畫面尺寸
     size = img.shape   # 取得攝影機影像尺寸
     w = size[1]        # 取得畫面寬度
     h = size[0]        # 取得畫面高度
@@ -92,7 +91,7 @@ with mp_hands.Hands(
       for hand_landmarks in results.multi_hand_landmarks:
         x = hand_landmarks.landmark[8].x *w#R_DIP].x *w  # 取得食指末端 x 座標
         y = hand_landmarks.landmark[8].y *h#mp_hands.HandLandmark.INDEX_FINGER_DIP].y *h  # 取得食指末端 y 座標
-        print(x,y)
+        #print(x,y)
         re = 1
     else:
       if(re == 1):
@@ -134,7 +133,7 @@ with mp_hands.Hands(
     if(x > 0.0 and y > 0.0):
       rx = int (x)
       ry = int (y)
-      print(" x :"+str(rx)+" and y: "+str(ry))
+      #print(" x :"+str(rx)+" and y: "+str(ry))
       #cv2.circle(img, (rx, ry), 15, (255, 0, 255), cv2.FILLED)
       col = 255
       if(sta == 1):
