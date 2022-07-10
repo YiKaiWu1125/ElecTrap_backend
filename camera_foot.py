@@ -11,7 +11,7 @@ class HandsProcessor:
     def __init__(self):
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
-        self.mp_hands = mp.solutions.hands
+        self.mp_pose = mp.solutions.pose
 
         self.camera_id = 0  # 選擇電腦相機id
         self.re = 1
@@ -30,11 +30,9 @@ class HandsProcessor:
 
         # For webcam input:
     def capture(self, flip=False):
-        with self.mp_hands.Hands(
-            max_num_hands=1,
-            model_complexity=0,
+        with self.mp_pose.Pose(
             min_detection_confidence=0.5,
-            min_tracking_confidence=0.5) as hands:
+            min_tracking_confidence=0.5) as pose:
           while self.cap.isOpened():
             success, image = self.cap.read()
             if not success:
@@ -55,16 +53,14 @@ class HandsProcessor:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
             # Return mediapipe results
-            return hands.process(image), image
+            return pose.process(image), image
 
     def parse(self, results):
-        if results.multi_hand_landmarks:
-            for hand_landmarks in results.multi_hand_landmarks:
-                # 取得食指末端 x 座標
-                self.x = hand_landmarks.landmark[8].x *self.w#R_DIP].x *w  # 取得食指末端 x 座標
-                self.y = hand_landmarks.landmark[8].y *self.h#mp_hands.HandLandmark.INDEX_FINGER_DIP].y *h  # 取得食指末端 y 座標
-                #print(self.x, self.y)
-                self.re = 1
+        if results.pose_landmarks:
+            self.x = results.pose_landmarks.landmark[31].x *self.w
+            self.y = results.pose_landmarks.landmark[31].y *self.h
+            #print(x,y)
+            self.re = 1
         elif self.re == 1:
             print("not hand.")
             self.re = 0
@@ -113,14 +109,12 @@ class HandsProcessor:
         # Draw the hand annotations on the image.
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        if results.multi_hand_landmarks:
-          for hand_landmarks in results.multi_hand_landmarks:
+        if results.pose_landmarks:
             self.mp_drawing.draw_landmarks(
                 image,
-                hand_landmarks,
-                self.mp_hands.HAND_CONNECTIONS,
-                self.mp_drawing_styles.get_default_hand_landmarks_style(),
-                self.mp_drawing_styles.get_default_hand_connections_style())
+                results.pose_landmarks,
+                self.mp_pose.POSE_CONNECTIONS,
+                landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style())
         # Flip the image horizontally for a selfie-view display.
         if self.x > 0.0 and self.y > 0.0:
           rx = int(self.x)

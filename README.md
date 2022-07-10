@@ -19,6 +19,8 @@ pip install -r requirements.txt
 
 ```
 CAMERA=hands python app.py
+CAMERA=head  python app.py
+CAMERA=foot  python app.py
 ```
 
 ### View it on web browser and play fun
