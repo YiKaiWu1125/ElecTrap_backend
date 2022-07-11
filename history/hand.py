@@ -20,47 +20,6 @@ run = 0
 run_val = 1
 up_down_range = 100
 
-## For static images:
-#IMAGE_FILES = []
-#with mp_hands.Hands(
-#    static_image_mode=True,
-#    max_num_hands=2,
-#    min_detection_confidence=0.5) as hands:
-#  for idx, file in enumerate(IMAGE_FILES):
-#    # Read an image, flip it around y-axis for correct handedness output (see
-#    # above).
-#    image = cv2.flip(cv2.imread(file), 1)
-#    # Convert the BGR image to RGB before processing.
-#    results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-#
-#    # Print handedness and draw hand landmarks on the image.
-#    print('Handedness:', results.multi_handedness)
-#    if not results.multi_hand_landmarks:
-#      continue
-#    image_height, image_width, _ = image.shape
-#    annotated_image = image.copy()
-#    for hand_landmarks in results.multi_hand_landmarks:
-#      print('hand_landmarks:', hand_landmarks)
-#      print(
-#          f'Index finger tip coordinates: (',
-#          f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * image_width}, '
-#          f'{hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * image_height})'
-#      )
-#      mp_drawing.draw_landmarks(
-#          annotated_image,
-#          hand_landmarks,
-#          mp_hands.HAND_CONNECTIONS,
-#          mp_drawing_styles.get_default_hand_landmarks_style(),
-#          mp_drawing_styles.get_default_hand_connections_style())
-#    cv2.imwrite(
-#        '/tmp/annotated_image' + str(idx) + '.png', cv2.flip(annotated_image, 1))
-#    # Draw hand world landmarks.
-#    if not results.multi_hand_world_landmarks:
-#      continue
-#    for hand_world_landmarks in results.multi_hand_world_landmarks:
-#      mp_drawing.plot_landmarks(
-#        hand_world_landmarks, mp_hands.HAND_CONNECTIONS, azimuth=5)
-
 # For webcam input:
 cap = cv2.VideoCapture(camera_id)
 with mp_hands.Hands(
@@ -118,6 +77,24 @@ with mp_hands.Hands(
             st =ss +"<cost:"+ str(int(time.time()-betime))+">"
         #if(re == 1 ):
         #    st =ss +"not hand."
+    if(sta == 2): #遊戲結束
+      if( x >= 155 and x <= 420 and y >= 280 and y <= 330): # 再玩一次
+        re = 1
+        x = -100.0
+        y = -100.0 
+        pTime = 0 #處理一張圖像前的時間
+        cTime = 0 #一張圖處理完的時間
+        sta = 0
+        st = "Rstart"
+        betime = 0
+        endtime = 0
+        run = 0
+        run_val = 1 
+      if( x >= 155 and x <= 420 and y >= 350 and y <= 400): # 遊戲結束
+        print("close game.")
+        cap.release()
+        cv2.destroyAllWindows()
+
     # Draw the hand annotations on the image.
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -165,9 +142,14 @@ with mp_hands.Hands(
           run_val= run_val*-1
         cv2.rectangle(image,(550,150+run),(600,200+run),(255,255,0),5)   # 畫出觸碰區
     if(sta == 2):
-        cv2.putText(image, "score:"+str(int(endtime-betime))+" s.",(0,250), cv2.FONT_HERSHEY_PLAIN, 5, (260,25,240), 3)
-        cv2.putText(image, "<Game over>",(0,350), cv2.FONT_HERSHEY_PLAIN, 5, (260,25,240), 3)
+        cv2.putText(image, "score:"+str(int(endtime-betime))+" s.",(0,150), cv2.FONT_HERSHEY_PLAIN, 5, (260,25,240), 3)
+        cv2.putText(image, "<Game over>",(0,250), cv2.FONT_HERSHEY_PLAIN, 5, (260,25,240), 3)
+        cv2.rectangle(image,(155,280),(420,330),(0,25,240),5)   # 在玩一次
+        cv2.putText(image, "play again", (160,320),cv2.FONT_HERSHEY_PLAIN, 3, (0,25,240), 3) # 在玩一次
+        cv2.rectangle(image,(155,350),(420,400),(0,25,240),5)   # 遊戲結束
+        cv2.putText(image, "end game", (160,390),cv2.FONT_HERSHEY_PLAIN, 3, (0,25,240), 3) # 遊戲結束
     cv2.imshow('MediaPipe Hands',image)# cv2.flip(image, 1))
     if cv2.waitKey(5) & 0xFF == 27:
       break
 cap.release()
+cv2.destroyAllWindows()

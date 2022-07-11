@@ -88,6 +88,23 @@ class HandsProcessor:
                     str(int(time.time() - self.betime)) + ">"
             # if(re == 1 ):
             #    st =ss +"not hand."
+        if self.sta == 2 : #遊戲結束
+            if  self.x >= 155 and self.x <= 420 and self.y >= 280 and self.y <= 330 : # 再玩一次
+                self.re = 1
+                self.x = -100.0
+                self.y = -100.0 
+                self.pTime = 0 #處理一張圖像前的時間
+                self.cTime = 0 #一張圖處理完的時間
+                self.sta = 0
+                self.st = "Restart"
+                self.betime = 0
+                self.endtime = 0
+                self.run = 0
+                self.run_val = 1 
+            if  self.x >= 155 and self.x <= 420 and self.y >= 350 and self.y <= 400 : # 遊戲結束
+                print("close game.")
+                self.cap.release()
+                #cv2.destroyAllWindows()
 
     def draw(self, results, image):
         def record_fps():
@@ -131,6 +148,7 @@ class HandsProcessor:
 
         record_fps()
 
+
         if self.sta != 2:
             cv2.rectangle(image, (50, 150 + self.run), (600, 200 + self.run),
                           (0, 0, 255), 5)   # 畫出觸碰區
@@ -145,9 +163,13 @@ class HandsProcessor:
                           (255, 255, 0), 5)   # 畫出觸碰區
         if self.sta == 2:
             cv2.putText(image, "score:" + str(int(self.endtime - self.betime)) + " s.",
-                        (0, 250), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
-            cv2.putText(image, "<Game over>", (0, 350),
+                        (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+            cv2.putText(image, "<Game over>", (0, 250),
                         cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+            cv2.rectangle(image,(155,280),(420,330),(0,25,240),5)   # 在玩一次
+            cv2.putText(image, "play again", (160,320),cv2.FONT_HERSHEY_PLAIN, 3, (0,25,240), 3) # 在玩一次
+            cv2.rectangle(image,(155,350),(420,400),(0,25,240),5)   # 遊戲結束
+            cv2.putText(image, "end game", (160,390),cv2.FONT_HERSHEY_PLAIN, 3, (0,25,240), 3) # 遊戲結束
         return image
         # cv2.imshow('MediaPipe Hands', image)
         # if cv2.waitKey(5) & 0xFF == 27:

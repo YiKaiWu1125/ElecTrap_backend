@@ -28,9 +28,9 @@ CAMERA=foot  python app.py
 ```
 set CAMERA=hands
 python app.py
-set CAMERA=head  
+set CAMERA=head
 python app.py
-set CAMERA=foot  
+set CAMERA=foot
 python app.py
 ```
 
