@@ -15,12 +15,23 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-### Run it
+### Run it(Linux)
 
 ```
 CAMERA=hands python app.py
 CAMERA=head  python app.py
 CAMERA=foot  python app.py
+```
+
+### Run it(windos cmd)
+
+```
+set CAMERA=hands
+python app.py
+set CAMERA=head  
+python app.py
+set CAMERA=foot  
+python app.py
 ```
 
 ### View it on web browser and play fun
