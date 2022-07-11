@@ -23,7 +23,7 @@ CAMERA=head  python app.py
 CAMERA=foot  python app.py
 ```
 
-### Run it(windos cmd)
+### Run it(windows cmd)
 
 ```
 set CAMERA=hands
