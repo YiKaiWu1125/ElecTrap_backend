@@ -23,7 +23,7 @@ CAMERA=head  python app.py
 CAMERA=foot  python app.py
 ```
 
-### Run it(windows cmd)
+### Run it(Windows CMD)
 
 ```
 set CAMERA=hands
@@ -31,6 +31,17 @@ python app.py
 set CAMERA=head
 python app.py
 set CAMERA=foot
+python app.py
+```
+
+### Run it(Windows PowerShell)
+
+```
+$Env:CAMERA = "hands"
+python app.py
+$Env:CAMERA = "head"
+python app.py
+$Env:CAMERA = "foot"
 python app.py
 ```
 
