@@ -8,9 +8,7 @@ from solution import Solution
 
 
 class Processor:
-    
-        
-    def __init__(self, type):
+    def __init__(self, mode):
         def init_val():
             self.x = -100.0
             self.y = -100.0
@@ -20,41 +18,40 @@ class Processor:
             self.print_string = "Ready"
             self.game_begin_time = 0
             self.game_end_time = 0
-            self.run = 0 # 當前電管位置 與 起始電管位置 間的距離
-            self.run_val = 1 # 電管移動的速度
-            self.up_down_range = 100 # 電管上下可移動的範圍
+            self.run = 0  # 當前電管位置 與 起始電管位置 間的距離
+            self.run_val = 1  # 電管移動的速度
+            self.up_down_range = 100  # 電管上下可移動的範圍
             self.cap = cv2.VideoCapture(self.camera_id)
-            self.mp_pose = mp.solutions.pose
-            self.solution = Solution(type)
+            self.solution = Solution(mode)
 
         self.camera_id = 0  # 選擇電腦相機id
         init_val()
 
     def capture(self, flip=False):
-        if hasattr(self, 'next_sol_type'):
-            self.solution = Solution(self.next_sol_type)
-            delattr(self, 'next_sol_type')
-        with self.solution.sol_func(**self.solution.sol_args) as sol:
-            while self.cap.isOpened():
-                success, image = self.cap.read()
-                if not success:
-                  print("Ignoring empty camera frame.")
-                  # If loading a video, use 'break' instead of 'continue'.
-                  continue
+        if hasattr(self, 'next_sol_mode'):
+            self.solution = Solution(self.next_sol_mode)
+            delattr(self, 'next_sol_mode')
+        sol = self.solution.processor
+        while self.cap.isOpened():
+            success, image = self.cap.read()
+            if not success:
+              print("Ignoring empty camera frame.")
+              # If loading a video, use 'break' instead of 'continue'.
+              continue
 
-                if flip:
-                    image = cv2.flip(image, 1)
-                size = image.shape   # 取得攝影機影像尺寸
-                self.w = size[1]        # 取得畫面寬度
-                self.h = size[0]        # 取得畫面高度
+            if flip:
+                image = cv2.flip(image, 1)
+            size = image.shape   # 取得攝影機影像尺寸
+            self.w = size[1]        # 取得畫面寬度
+            self.h = size[0]        # 取得畫面高度
 
-                # To improve performance, optionally mark the image as not writeable to
-                # pass by reference.
-                image.flags.writeable = False
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            # To improve performance, optionally mark the image as not writeable to
+            # pass by reference.
+            image.flags.writeable = False
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-                # Return mediapipe results
-                return sol.process(image), image
+            # Return mediapipe results
+            return sol.process(image), image
 
     def parse(self, results):
         def r_init_val():
@@ -148,9 +145,9 @@ class Processor:
                           (255, 255, 0), 5)   # 畫出終止位置框
         if self.sta == 'game_over':
             cv2.putText(image, "score:" + str(int(self.game_end_time - self.game_begin_time)) + " s.",
-                        (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3) # 檢視成績
+                        (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)  # 檢視成績
             cv2.putText(image, "<Game over>", (0, 250),
-                        cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3) 
+                        cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
             cv2.rectangle(image, (155, 280), (420, 330),
                           (0, 25, 240), 5)   # 再玩一次
             cv2.putText(image, "play again", (160, 320),
@@ -164,8 +161,8 @@ class Processor:
         # if cv2.waitKey(5) & 0xFF == 27:
             # break
 
-    def change_sol(self, type):
-        self.next_sol_type = type
+    def change_sol(self, mode):
+        self.next_sol_mode = mode
 
 
 class Camera(BaseCamera):
