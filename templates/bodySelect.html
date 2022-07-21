@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>ElecTrap 樂齡挑戰</title>
+  <link rel="stylesheet" href="/css/background.css">
+  <link rel="stylesheet" href="/css/button.css">
+  <script>
+    window.console = window.console || function(t) {};
+  </script>
+  <script>
+    if (document.location.search.match(/type=embed/gi)) {
+      window.parent.postMessage("resize", "*");
+    }
+  </script>
+</head>
+
+<body translate="no" >
+  <div class="container">
+    <div class="sky">
+        <button type="button" class="clkbutton" role="button" 
+        style ="position:absolute;bottom:5%;right:2%;width:130px;height:80px;font-size: 40px;"
+        onclick="javascript:location.href='gamemode.html'"  >back</button>
+
+      <div class="text">
+        <p style="position:fixed ;top:20%; right:35%;">請選擇身體部位</p>
+        <button type="button" class="clkbutton" role="button" style="position:fixed;top:47%;left:20%;"onclick="javascript:location.href='hands_levelmap.html'"  >手</button>
+        <button type="button" class="clkbutton" role="button" style="position:fixed;top:47%;left:35%;"onclick="javascript:location.href='levelmap.html'"  >手肘</button>
+        <button type="button" class="clkbutton" role="button" style="position:fixed;top:47%;left:50%;"onclick="javascript:location.href='foot_levelmap.html'"  >腳</button>
+        <button type="button" class="clkbutton" role="button" style="position:fixed;top:47%;left:65%;"onclick="javascript:location.href='head_levelmap.html'"  >頭</button>
+      </div>
+      <div class="stars"></div>
+      <div class="stars1"></div>
+      <div class="stars2"></div>
+      <div class="shooting-stars"></div>
+    </div>
+  </div>
+
+
+</body>
+
+</html>

@@ -29,7 +29,7 @@
     touch-action: manipulation;
     width:200px;height:100px;
     position: absolute;
-    top:80%;left:35%;
+    
   }
   
   .clkbutton:hover {

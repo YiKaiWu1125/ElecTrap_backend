@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     """Video streaming home page."""
-    return render_template('index.html')
+    return render_template('demo.html')
 
 
 def gen(camera):
@@ -25,7 +25,7 @@ def gen(camera):
 @app.route('/', methods=['POST'])
 def pose():
     Camera.processor.change_sol(request.values['pose'])
-    return render_template('index.html')
+    return render_template('demo.html')
 
 
 @app.route('/video_feed')

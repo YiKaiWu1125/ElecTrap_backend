@@ -1,0 +1,16 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <title>Video Streaming Demonstration</title>
+  </head>
+  <body>
+    <h1>Video Streaming Demonstration</h1>
+    <img src="{{ url_for('video_feed') }}">
+    <h1> Select Pose Type </h1>
+    <form method="POST" action="{{ url_for('pose') }}">
+    <button type="submit" name="pose" value="hands"> Hands </button>
+    <button type="submit" name="pose" value="foot"> Foot </button>
+    <button type="submit" name="pose" value="head"> Head </button>
+    </form>
+  </body>
+</html>

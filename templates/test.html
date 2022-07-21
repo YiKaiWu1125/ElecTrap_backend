@@ -13,6 +13,16 @@
       window.parent.postMessage("resize", "*");
     }
   </script>
+  <style>
+    iframe {
+        display:block;
+        width: 100%; height:100%;
+        background: transparent;
+        position:fixed;  
+        top:60px;
+        left:450px;
+    }
+  </style>
 </head>
 
 <!-- HTML !-->
@@ -21,9 +31,13 @@
 <body translate="no" >
   <div class="container">
     <div class="sky">
-      <div class="text">
-        <p>ElecTrap 樂齡挑戰</p>
-        <button type="button" class="clkbutton" role="button" style="top:80%;left:35%;"onclick="javascript:location.href='gamemode.html'"  >Start</button>
+      <div >
+        <div id="iframe">
+            <iframe frameborder="0"
+                noresize="noresize"
+                src="http://127.0.0.1:5000">
+            </iframe>
+        </div>
       </div>
       <div class="stars"></div>
       <div class="stars1"></div>
@@ -36,3 +50,9 @@
 </body>
 
 </html>
+
+
+
+
+
+
