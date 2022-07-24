@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>ElecTrap 樂齡挑戰</title>
-  <link rel="stylesheet" href="/css/background.css">
-  <link rel="stylesheet" href="/css/button.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
   <script>
     window.console = window.console || function(t) {};
   </script>
@@ -25,7 +25,7 @@
       <div class="text">
         <p style="position:fixed ;top:17%; right:40%;">請選擇關卡</p>
         <button type="button" class="clkbutton" role="button" style="position:fixed;top:45%;left:20%;"onclick="javascript:location.href='demo.html'"  >1</button>
-        <button type="button" class="clkbutton" role="button" style="position:fixed;top:45%;left:35%;"onclick="javascript:location.href='levelmap.html'"  >2</button>
+        <button type="button" class="clkbutton" role="button" style="position:fixed;top:45%;left:35%;"onclick="javascript:location.href='demo.html'"  >2</button>
         <button type="button" class="clkbutton" role="button" style="position:fixed;top:45%;left:50%;"onclick="window.alert('此區域尚未開發')"  >3</button>
         <button type="button" class="clkbutton" role="button" style="position:fixed;top:45%;left:65%;"onclick="window.alert('此區域尚未開發')"  >4</button>
         <button type="button" class="clkbutton" role="button" style="position:fixed;top:63%;left:20%;"onclick="window.alert('此區域尚未開發')"  >5</button>
