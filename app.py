@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, Response, request
-
+from flask import Flask, render_template, Response, request, abort, jsonify
+from flask_socketio import SocketIO, emit
 import mediapipe_processor
 
 Camera = mediapipe_processor.Camera
 
 app = Flask(__name__)
-
 
 @app.route('/')
 def index():

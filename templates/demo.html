@@ -5,6 +5,7 @@
     <title>ElecTrap 樂齡挑戰</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/videostream.css') }}" >
     <script>
       window.console = window.console || function(t) {};
     </script>
@@ -14,14 +15,23 @@
       }
     </script>
   </head>
+
   <body>
-    <h1>Video Streaming Demonstration</h1>
-    <img src="{{ url_for('video_feed') }}">
-    <h1> Select Pose Type </h1>
-    <form method="POST" action="{{ url_for('pose') }}">
-    <button type="submit" name="pose" value="hands"> Hands </button>
-    <button type="submit" name="pose" value="foot"> Foot </button>
-    <button type="submit" name="pose" value="head"> Head </button>
-    </form>
+    <div class="container">
+      <div class="sky"></div>
+      <div class="stars"></div>
+      <div class="stars1"></div>
+      <div class="stars2"></div>
+      <div class="shooting-stars"></div>
+    </div>
+    <div class="videostream">
+      <img src="{{ url_for('video_feed') }}">
+      <h1> Select Pose Type </h1>
+        <form class ="btposition" method="POST" action="{{ url_for('pose') }}">
+          <button class="clkbutton" id ="Handsbt" role="button" type="submit" name="pose" value="hands"> Hands </button>
+          <button class="clkbutton" id ="Footbt" role="button" type="submit" name="pose" value="foot"> Foot </button>
+          <button class="clkbutton" id ="Headbt" role="button" type="submit" name="pose" value="head"> Head </button>
+        </form>
+    </div>
   </body>
 </html>
