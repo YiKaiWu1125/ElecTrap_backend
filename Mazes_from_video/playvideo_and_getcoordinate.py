@@ -10,12 +10,12 @@ mp_pose = mp.solutions.pose
 import math
 import time
 import numpy as np
+
 width = 1920
 hight = 1080
-
 half_track_width = 50
 
-def zero_to_one(x):
+def zero_to_one(x): # 使其在0~1間
     if x > 1.0 :
         x = 1.0
     if x < 0.0 :

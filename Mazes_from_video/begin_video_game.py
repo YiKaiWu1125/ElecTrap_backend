@@ -12,15 +12,10 @@ import numpy
 import playvideo_and_getcoordinate as p_g
 
 sample_video = "test1.mp4"
-video_id = "test1.mp4"
+video_id = 1#"test1.mp4" # if need use sample_video "test1.mp4" ,need to delete row:128 -> img=cv2.flip(img, 1) # 畫面翻轉
 width = 1920
 hight = 1080
 half_track_width = 50 # 電管'半徑'寬度
-
-
-
-right_hand,binarization_arr=p_g.get_track(sample_video)
-print("successful get coordinate.")
 
 
 def draw(image,right_hand,binarization_arr,nownumber):
@@ -31,7 +26,7 @@ def draw(image,right_hand,binarization_arr,nownumber):
         image = p_g.draw_circle(image,right_hand,nownumber)
     return image
 
-def draw_view(image,right_hand,binarization_arr,x,y,now_number,sta,game_begin_time,game_end_time):
+def judgment_status(image,right_hand,binarization_arr,x,y,now_number,sta,game_begin_time,game_end_time):
     front = (now_number-5)
     end = (now_number+5)
     if front < 0 :
@@ -61,9 +56,9 @@ def draw_view(image,right_hand,binarization_arr,x,y,now_number,sta,game_begin_ti
     if sta != 'game_over':
         image = draw(image,right_hand,binarization_arr,now_number)   # 畫出電管
     if sta == 'prepare_begin':
-        image = cv2.circle(image, (right_hand[0][0],right_hand[0][1]), half_track_width, (125,0,125), -1)# 畫出起始位置框
+        image = cv2.circle(image, (right_hand[0][0],right_hand[0][1]), half_track_width, (255,0,0), -1)# 畫出起始位置框
     if sta == 'playing':
-        cv2.circle(image, (right_hand[len(right_hand)-1][0],right_hand[len(right_hand)-1][1]), half_track_width, (0,125,125), -1)   # 畫出終止位置框
+        cv2.circle(image, (right_hand[len(right_hand)-1][0],right_hand[len(right_hand)-1][1]), half_track_width, (255,0,0), -1)   # 畫出終止位置框
     if sta == 'game_over':
         cv2.putText(image, "score:" + str(int(game_end_time - game_begin_time)) + " s.",
                     (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)  # 檢視成績
@@ -80,82 +75,92 @@ def draw_view(image,right_hand,binarization_arr,x,y,now_number,sta,game_begin_ti
     #print("sta is :"+str(sta))
     return image,now_number,sta,game_begin_time,game_end_time
 
+def begin_video_game():
 
-# For webcam input:
-cap = cv2.VideoCapture(video_id)
-#挑整與顯示畫質
-wi = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-hi = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-print("webcam init Image Size: %d x %d" % (wi, hi))
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, width) #設定解析度
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, hight) #設定解析度
-wi = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-hi = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-print("webcam fix Image Size: %d x %d" % (wi, hi))
+    right_hand,binarization_arr=p_g.get_track(sample_video)
+    print("successful get coordinate.")
 
-sta = 'prepare_begin'
-now_number = 0
-game_end_time = 0 
-game_begin_time = 0 
+    # For webcam input:
+    cap = cv2.VideoCapture(video_id)
+    #挑整與顯示畫質
+    wi = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    hi = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    print("webcam init Image Size: %d x %d" % (wi, hi))
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, width) #設定解析度
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, hight) #設定解析度
+    wi = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    hi = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    print("webcam fix Image Size: %d x %d" % (wi, hi))
+
+    sta = 'prepare_begin'
+    now_number = 0
+    game_end_time = 0 
+    game_begin_time = 0 
 
 
-with mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) as pose:
-    while cap.isOpened():
-        success, image = cap.read()
-        if not success:
-            ##can use to debug map
-            #for i in range(len(binarization_arr)):
-            #    rmg = img
-            #    for h in range (hight+5):
-            #        for w in range (width+5):
-            #            if binarization_arr[i][w][h] == 1 and i==0:
-            #                rmg=cv2.rectangle(rmg,(w-1,h-1),(w+1,h+1),(255,150,200),8)   # 畫出手的位置
-            #    cv2.imshow('show', rmg)
-            #    if cv2.waitKey(5) & 0xFF == 27:
-            #        break                          
-            #time.sleep(5)
+    with mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+            success, image = cap.read()
+            if not success:
+                ##can use to debug map
+                #for i in range(len(binarization_arr)):
+                #    rmg = img
+                #    for h in range (hight+5):
+                #        for w in range (width+5):
+                #            if binarization_arr[i][w][h] == 1 and i==0:
+                #                rmg=cv2.rectangle(rmg,(w-1,h-1),(w+1,h+1),(255,150,200),8)   # 畫出手的位置
+                #    cv2.imshow('show', rmg)
+                #    if cv2.waitKey(5) & 0xFF == 27:
+                #        break                          
+                #time.sleep(5)
 
-            print("Ignoring empty camera frame.")
-            # If loading a video, use 'break' instead of 'continue'.
-            time.sleep(5)
-            break
+                print("Ignoring empty camera frame.")
+                # If loading a video, use 'break' instead of 'continue'.
+                time.sleep(5)
+                break
 
-        # To improve performance, optionally mark the image as not writeable to
-        # pass by reference.
-        
-        image.flags.writeable = False
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        img = image
-        #img=cv2.flip(img, 1) # 畫面翻轉
-        #img = cv2.resize(image,(width,hight))  # 調整畫面尺寸
-        results = pose.process(img)
-        
-        size = img.shape   # 取得攝影機影像尺寸
-        w = size[1]        # 取得畫面寬度
-        h = size[0]        # 取得畫面高度
+            # To improve performance, optionally mark the image as not writeable to
+            # pass by reference.
 
-        if results.pose_landmarks:
-            rx = p_g.zero_to_one(results.pose_landmarks.landmark[20].x)
-            ry = p_g.zero_to_one(results.pose_landmarks.landmark[20].y)
-            x = int(rx *w)
-            y = int(ry *h)
-            re = 1
-        else:
-            print("no hand.")
-        # Draw the hand annotations on the image.
-        img.flags.writeable = True
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        mp_drawing.draw_landmarks(
-            img,
-            results.pose_landmarks,
-            mp_pose.POSE_CONNECTIONS,
-            landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-        img,now_number,sta,game_begin_time,game_end_time = draw_view(img,right_hand,binarization_arr,x,y,now_number,sta,game_begin_time,game_end_time)
+            image.flags.writeable = False
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            img = image
+            img=cv2.flip(img, 1) # 畫面翻轉
+            #img = cv2.resize(image,(width,hight))  # 調整畫面尺寸
+            results = pose.process(img)
 
-        img=cv2.rectangle(img,(x-10,y-10),(x+10,y+10),(0,150,200),8)   # 畫出手的位置
-        
-        cv2.imshow('MediaPipe Pose', img)
-        if cv2.waitKey(5) & 0xFF == 27:
-            break
-cap.release()
-cv2.destroyAllWindows()
+            size = img.shape   # 取得攝影機影像尺寸
+            w = size[1]        # 取得畫面寬度
+            h = size[0]        # 取得畫面高度
+
+            if results.pose_landmarks:
+                rx = p_g.zero_to_one(results.pose_landmarks.landmark[20].x)
+                ry = p_g.zero_to_one(results.pose_landmarks.landmark[20].y)
+                x = int(rx *w)
+                y = int(ry *h)
+                re = 1
+            else:
+                print("no hand.")
+            # Draw the hand annotations on the image.
+            img.flags.writeable = True
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            mp_drawing.draw_landmarks(
+                img,
+                results.pose_landmarks,
+                mp_pose.POSE_CONNECTIONS,
+                landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+            img,now_number,sta,game_begin_time,game_end_time = judgment_status(img,right_hand,binarization_arr,x,y,now_number,sta,game_begin_time,game_end_time)
+
+            img=cv2.rectangle(img,(x-10,y-10),(x+10,y+10),(0,0,255),8)   # 畫出手的位置
+
+            cv2.imshow('MediaPipe Pose', img)
+            if cv2.waitKey(5) & 0xFF == 27:
+                break
+            if sta == 'game_over':
+                time.sleep(5)
+                break
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    begin_video_game()
