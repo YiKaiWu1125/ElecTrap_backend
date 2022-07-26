@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>ElecTrap 樂齡挑戰</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.min.css') }}" >
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
+
+  <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
   <script>
     window.console = window.console || function(t) {};
   </script>
@@ -16,28 +19,26 @@
 </head>
 
 <body translate="no" >
-  <div class="container">
-    <div class="sky">
-      <button type="button" class="clkbutton" role="button" 
-        style ="position:absolute;bottom:5%;right:2%;width:130px;height:80px;font-size: 40px;"
-        onclick="javascript:location.href='index.html'"  >back</button>
-      
-        <div class="text">
-        <p style="position:relative ;top:0%; right:60%;">遊戲模式</p>
-        <button type="button" class="clkbutton" role="button" 
-        style ="position:absolute;top:75%;right:120%;width:300px;height:100px;"
+  <div class="background-animation">
+    <div class="sky text container">
+      <p class="col text-center">遊戲模式</p>
+      <div class="row">
+        <div class="col-1"></div>
+        <button type="button" class="clkbutton col" role="button" 
         onclick="javascript:location.href='bodySelect.html'"  >暖身模式</button>
-
-        <button type="button" class="clkbutton" role="button" 
-        style ="position:absolute;top:75%;left:10%;width:300px;height:100px;"
+        <div class="col-1"></div>
+        <button type="button" class="clkbutton col" role="button" 
         onclick="javascript:location.href='bodySelect.html'"  >大神模式</button>
-
+        <div class="col-1"></div>
       </div>
+
       <div class="stars"></div>
       <div class="stars1"></div>
       <div class="stars2"></div>
       <div class="shooting-stars"></div>
     </div>
+    <button type="button" class="clkbutton back-btn" role="button" 
+      onclick="javascript:history.back()">back</button>
   </div>
 </body>
 </html>

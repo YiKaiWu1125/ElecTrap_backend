@@ -29,8 +29,15 @@
   touch-action: manipulation;
   width: 200px;
   height: 100px;
-  position: absolute;
+}
 
+.back-btn {
+  position: fixed;
+  bottom: 5%;
+  right: 2%;
+  width: 130px;
+  height: 80px;
+  font-size: 40px;
 }
 
 .clkbutton:hover {

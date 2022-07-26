@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>ElecTrap 樂齡挑戰</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.min.css')}}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
+
+  <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
   <script>
     window.console = window.console || function(t) {};
   </script>
@@ -16,23 +19,22 @@
 </head>
 
 <body translate="no" >
-  <div class="container">
-    <div class="sky">
-        <button type="button" class="clkbutton" role="button" 
-        style ="position:absolute;bottom:5%;right:2%;width:130px;height:80px;font-size: 40px;"
-        onclick="javascript:location.href='gamemode.html'"  >back</button>
+  <div class="background-animation">
+    <div class="sky text container">
 
-      <div class="text">
-        <p style="position:fixed ;top:20%; right:35%;">請選擇身體部位</p>
-        <button type="button" class="clkbutton" role="button" style="position:fixed;top:47%;left:20%;"onclick="javascript:location.href='hands_levelmap.html'"  >手</button>
-        <button type="button" class="clkbutton" role="button" style="position:fixed;top:47%;left:35%;"onclick="javascript:location.href='levelmap.html'"  >手肘</button>
-        <button type="button" class="clkbutton" role="button" style="position:fixed;top:47%;left:50%;"onclick="javascript:location.href='foot_levelmap.html'"  >腳</button>
-        <button type="button" class="clkbutton" role="button" style="position:fixed;top:47%;left:65%;"onclick="javascript:location.href='head_levelmap.html'"  >頭</button>
+      <p class="text-center">請選擇身體部位</p>
+      <div class="row">
+      <button type="button" class="clkbutton col mx-1" role="button" onclick="javascript:location.href='hands_levelmap.html'"  >手</button>
+      <button type="button" class="clkbutton col mx-1" role="button" onclick="javascript:location.href='levelmap.html'"  >手肘</button>
+      <button type="button" class="clkbutton col mx-1" role="button" onclick="javascript:location.href='foot_levelmap.html'"  >腳</button>
+      <button type="button" class="clkbutton col mx-1" role="button" onclick="javascript:location.href='head_levelmap.html'"  >頭</button>
       </div>
       <div class="stars"></div>
       <div class="stars1"></div>
       <div class="stars2"></div>
       <div class="shooting-stars"></div>
+      <button type="button" class="clkbutton back-btn" role="button" 
+      onclick="javascript:history.back()">back</button>
     </div>
   </div>
 </body>
