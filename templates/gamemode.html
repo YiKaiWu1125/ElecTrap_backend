@@ -6,6 +6,7 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.min.css') }}" >
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/radiobt.css') }}" >
 
   <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
   <script>
@@ -21,16 +22,107 @@
 <body translate="no" >
   <div class="background-animation">
     <div class="sky text container">
-      <p class="col text-center">遊戲模式</p>
-      <div class="row">
-        <div class="col-1"></div>
-        <button type="button" class="clkbutton col" role="button" 
-        onclick="javascript:location.href='bodySelect.html'"  >暖身模式</button>
-        <div class="col-1"></div>
-        <button type="button" class="clkbutton col" role="button" 
-        onclick="javascript:location.href='bodySelect.html'"  >大神模式</button>
-        <div class="col-1"></div>
-      </div>
+      <p class="col text-center option">開始您的遊戲</p>
+      <p class="col text-center titlesize">遊戲模式</p>
+      <form method="post">
+        <div class="row">
+          <div class="col-4"></div>
+          <label class="col control control-radio option">
+            暖身模式
+            <input type="radio" name="gamemode" value="warmup" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class="col control control-radio option">
+            大神模式
+            <input type="radio" name="gamemode" value="master" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <div class="col-4"></div>
+        </div>
+        <br>
+        <p class="col text-center titlesize">身體部位</p>
+        <div class="row control-group">
+          <div class="col-4"></div>
+          <label class="col-1 control control-radio option">
+            手
+            <input type="radio" name="body" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class="col-1 control control-radio option">
+            手肘
+            <input type="radio" name="body" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class ="col-1 control control-radio option">
+            腳
+            <input type="radio" name="body" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class ="col-1 control control-radio option">
+            頭
+            <input type="radio" name="body" />
+            <div class="control_indicator"></div>
+          </label>
+          <div class="col-4"></div>
+        </div>
+        <br>
+        <p class="col text-center titlesize">選擇您的關卡</p>
+        <div class="row control-group">
+          <div class="col-2"></div>
+          <label class="col-2 levelfont control control-radio">
+            Level 1
+            <input type="radio" name="level" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class="col-2 control control-radio levelfont">
+            Level 2
+            <input type="radio" name="level" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class="col-2 control control-radio levelfont">
+            Level 3
+            <input type="radio" name="level" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class="col-2 control control-radio levelfont">
+            Level 4
+            <input type="radio" name="level" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <div class="col-2"></div>
+          <div class="col-2"></div>
+          <label class="col-2 control control-radio levelfont">
+            Level 5
+            <input type="radio" name="level" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class="col-2 control control-radio levelfont">
+            Level 6
+            <input type="radio" name="level" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class="col-2 control control-radio levelfont">
+            Level 7
+            <input type="radio" name="level" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class="col-2 control control-radio levelfont">
+            Level 8
+            <input type="radio" name="level" checked="checked" />
+            <div class="control_indicator"></div>
+          </label>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+          <div class="col-5"></div>
+          <div class="col-2">
+            <button type="button" class="clkbutton submitbt" role="button" 
+            onclick="javascript:location.href='/demo'">Submit</button>
+          </div>
+          <div class="col-5"></div>
+        </div>
+      </form>
 
       <div class="stars"></div>
       <div class="stars1"></div>
@@ -38,7 +130,7 @@
       <div class="shooting-stars"></div>
     </div>
     <button type="button" class="clkbutton back-btn" role="button" 
-      onclick="javascript:history.back()">back</button>
+      onclick="javascript:location.href='/'">back</button>
   </div>
 </body>
 </html>

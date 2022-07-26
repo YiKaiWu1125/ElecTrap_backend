@@ -29,9 +29,13 @@ html body {
 
 p {
   font-size: 70px;
+  font-family: "Comic Sans MS";
 
 }
-
+span {
+  font-family:"STZhongsong";
+}
+/*"NSimSun, STXihei, */
 .stars {
   z-index: 10;
   width: 1px;

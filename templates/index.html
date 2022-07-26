@@ -6,8 +6,9 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.min.css')}}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
-  
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/popup_frame.css') }}" >
   <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
+
   <script>
     window.console = window.console || function(t) {};
   </script>
@@ -16,22 +17,55 @@
       window.parent.postMessage("resize", "*");
     }
   </script>
+
+
 </head>
 
 <body translate="no" >
   <div class="background-animation">
     <div class="sky text container">
-      <p class="text-center">ElecTrap 樂齡挑戰</p>
+      <p class="text-center">ElecTrap <span>樂齡挑戰</span></p>
       <div class="row">
         <div class="col"></div>
-        <button type="button" class="clkbutton" role="button" onclick="javascript:location.href='gamemode.html'"  >Start</button>
+        <div class="wrap">
+          <a class="popup-btn clkbutton" href="#letmeopen">開始遊戲</a>
+        </div>
+        <div class="popup-wrap" id="letmeopen">
+          <div class="popup-box transform-out">
+            <h2>請輸入使用者名稱</h2>
+            <h3>
+              <input type="text" class ="nameframe" value="我是大電神">
+              <button type="button" class="clkbutton" role="button" onclick="javascript:location.href='/gamemode'"  >Start</button>
+            </h3>
+              <a class="close-btn popup-close" href="#">x</a>
+          </div>
+        </div>
+        <div class="col"></div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col wrap">
+          <input type="button" value="排行榜" class="popup-btn clkbutton rank-btn" role="button" onclick="javascript:location.href=window.alert('此區域尚未開發')"  ></button>
+
+        </div>
         <div class="col"></div>
       </div>
       <div class="stars"></div>
       <div class="stars1"></div>
       <div class="stars2"></div>
       <div class="shooting-stars"></div>
+      <script src="{{ url_for('static', filename='/js/jquery.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/stopExecutionOnTimeout.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
+      <script id="rendered-js" ></script>
     </div>
   </div>
 </body>
 </html>
+
+<!--
+<button type="button" class="clkbutton" role="button" onclick="javascript:location.href='gamemode.html'"  >Start</button>
+
+
+-->

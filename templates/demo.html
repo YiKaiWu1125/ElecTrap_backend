@@ -5,6 +5,8 @@
     <title>ElecTrap 樂齡挑戰</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.min.css') }}" >
+    <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
     <script>
       window.console = window.console || function(t) {};
     </script>
@@ -14,15 +16,41 @@
       }
     </script>
   </head>
-
-  <body>
-    <h1>Video Streaming Demonstration</h1>
-    <img src="{{ url_for('video_feed') }}">
-    <h1> Select Pose Type </h1>
-    <form method="POST" action="{{ url_for('pose') }}">
-    <button type="submit" name="pose" value="hands"> Hands </button>
-    <button type="submit" name="pose" value="foot"> Foot </button>
-    <button type="submit" name="pose" value="head"> Head </button>
-    </form>
+  <body translate="no" >
+    <div class="background-animation">
+      <div class="sky text container">
+        <p class="col text-center">Video Streaming Demonstration</p>
+        <div class="row">
+          <div class="col"></div>
+          <div class="col">
+            <img src="{{ url_for('video_feed') }}">
+          </div>
+          <div class="col"></div>  
+        </div>
+        <p class="col text-center">Select Pose Type</p>
+        <form class="row" method="POST" action="{{ url_for('pose') }}">
+          <div class="col-3"></div>
+          <div class="col-2">
+            <button type="submit" class="clkbutton" name="pose" value="hands"> Hands </button>
+          </div>
+          <div class="col-2">
+            <button type="submit" class="clkbutton" name="pose" value="foot"> Foot </button>
+          </div>
+          <div class="col-2">
+            <button type="submit" class="clkbutton" name="pose" value="head"> Head </button>
+          </div>
+          <div class="col-3"></div>
+        </form>
+        <div class="stars"></div>
+        <div class="stars1"></div>
+        <div class="stars2"></div>
+        <div class="shooting-stars"></div>
+      </div>
+    </div>
   </body>
 </html>
+
+
+
+
+

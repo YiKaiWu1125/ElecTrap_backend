@@ -48,3 +48,16 @@
 .clkbutton:focus {
   box-shadow: rgb(255, 248, 248) 2px 8px 4px -6px;
 }
+
+.titlesize {
+  font-size:50px;
+  font-family: "STZhongsong";
+}
+
+.submitbt {
+  width: 165px;
+  height: 80px;
+  font-size: 40px;
+
+
+}
