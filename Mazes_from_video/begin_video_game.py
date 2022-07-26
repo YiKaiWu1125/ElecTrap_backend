@@ -10,22 +10,16 @@ import time
 import numpy
 import playvideo_and_getcoordinate as p_g
 
-sample_video = "test1.mp4"
-video_id = 1#"test1.mp4" # if need use sample_video "test1.mp4" ,need to delete row:128 -> img=cv2.flip(img, 1) # 畫面翻轉
-width = 1920
-hight = 1080
-half_track_width = 50 # 電管'半徑'寬度
 
-
-def draw(image,right_hand,binarization_arr,nownumber):
+def draw(image,right_hand,binarization_arr,nownumber,half_track_width):
     
     for i in range(1,len(right_hand)):
-        image=p_g.draw_and_save_circle_link_poly(image,right_hand[i-1],right_hand[i],i,binarization_arr,0)
+        image=p_g.draw_and_save_circle_link_poly(image,right_hand[i-1],right_hand[i],i,binarization_arr,0,half_track_width)
     for i in range (len(right_hand)):
-        image = p_g.draw_circle(image,right_hand,nownumber)
+        image = p_g.draw_circle(image,right_hand,nownumber,half_track_width)
     return image
 
-def judgment_status(image,right_hand,binarization_arr,x,y,now_number,sta,game_begin_time,game_end_time):
+def judgment_status(image,right_hand,binarization_arr,x,y,now_number,sta,game_begin_time,game_end_time,half_track_width):
     front = (now_number-5)
     end = (now_number+5)
     if front < 0 :
@@ -52,7 +46,7 @@ def judgment_status(image,right_hand,binarization_arr,x,y,now_number,sta,game_be
             sta = 'prepare_begin'
 
     if sta != 'game_over':
-        image = draw(image,right_hand,binarization_arr,now_number)   # 畫出電管
+        image = draw(image,right_hand,binarization_arr,now_number,half_track_width)   # 畫出電管
     if sta == 'prepare_begin':
         image = cv2.circle(image, (right_hand[0][0],right_hand[0][1]), half_track_width, (255,0,0), -1)# 畫出起始位置框
     if sta == 'playing':
@@ -73,9 +67,9 @@ def judgment_status(image,right_hand,binarization_arr,x,y,now_number,sta,game_be
     #print("sta is :"+str(sta))
     return image,now_number,sta,game_begin_time,game_end_time
 
-def begin_video_game():
+def begin_video_game(width,hight,half_track_width,sample_video,video_id):
 
-    right_hand,binarization_arr=p_g.get_track(sample_video)
+    right_hand,binarization_arr=p_g.get_track(sample_video,width,hight,half_track_width)
     print("successful get coordinate.")
 
     # For webcam input:
@@ -138,7 +132,8 @@ def begin_video_game():
                 x = int(rx *w)
                 y = int(ry *h)
             else:
-                print("no hand.")
+                #print("no hand.")
+                pass
             # Draw the hand annotations on the image.
             img.flags.writeable = True
             img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
@@ -147,7 +142,7 @@ def begin_video_game():
                 results.pose_landmarks,
                 mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-            img,now_number,sta,game_begin_time,game_end_time = judgment_status(img,right_hand,binarization_arr,x,y,now_number,sta,game_begin_time,game_end_time)
+            img,now_number,sta,game_begin_time,game_end_time = judgment_status(img,right_hand,binarization_arr,x,y,now_number,sta,game_begin_time,game_end_time,half_track_width)
 
             img=cv2.rectangle(img,(x-10,y-10),(x+10,y+10),(0,0,255),8)   # 畫出手的位置
 
@@ -160,5 +155,14 @@ def begin_video_game():
     cap.release()
     cv2.destroyAllWindows()
 
+
+
 if __name__ == '__main__':
-    begin_video_game()
+
+    sample_video = "test1.mp4"
+    video_id = 0#"test1.mp4" # if need use sample_video "test1.mp4" ,need to delete row:121 -> img=cv2.flip(img, 1) # 畫面翻轉
+    width = 1920
+    hight = 1080
+    half_track_width = 50 # 電管'半徑'寬度
+    
+    begin_video_game(width,hight,half_track_width,sample_video,video_id)

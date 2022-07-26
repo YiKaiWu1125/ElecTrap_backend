@@ -10,16 +10,13 @@ import math
 import time
 import numpy as np
 
-width = 1920
-hight = 1080
-half_track_width = 50
-
 def zero_to_one(x): # 使其在0~1間
     if x > 1.0 :
         x = 1.0
     if x < 0.0 :
         x = 0.0
     return x
+
 def is_in_poly(point, poly):
     px, py = point
     is_in = False
@@ -42,7 +39,7 @@ def is_in_poly(point, poly):
 def line_length(ax,ay,bx,by):
     return ((ax-bx)**2)+((ay-by)**2)
 
-def draw_circle(img,coor_arr,nownumber):
+def draw_circle(img,coor_arr,nownumber,half_track_width):
     for i in range(len(coor_arr)):
         if nownumber == i:
             col = [255,255,255]
@@ -61,7 +58,7 @@ def draw_dot(img,coor_arr):
         cv2.rectangle(img,(coor_arr[i][0]-1,coor_arr[i][1]-1),(coor_arr[i][0]+1,coor_arr[i][1]+1),(0,0,255),3)   # 畫出觸碰區
     return img
 
-def draw_and_save_circle_link_poly(img,coor_a,coor_b,index,binarization_arr,open_save): # get two crycle coordinate and let them link together
+def draw_and_save_circle_link_poly(img,coor_a,coor_b,index,binarization_arr,open_save,half_track_width): # get two crycle coordinate and let them link together
     w = coor_b[0] - coor_a[0]   # x
     h = coor_b[1] - coor_a[1]   # y
     dis_len = float((w**2) + (h**2))
@@ -115,7 +112,7 @@ def draw_and_save_circle_link_poly(img,coor_a,coor_b,index,binarization_arr,open
     else :
         return img
       
-def save_crycle_to_3_array(binarization_arr,coor_arr,index):
+def save_crycle_to_3_array(binarization_arr,coor_arr,index,width,hight,half_track_width):
     binarization_arr.append([[0 for j in range(hight+10)]for i in range(width+10)]) #[x][y]
     x_begin = coor_arr[index][0]-half_track_width
     if x_begin < 0 :
@@ -135,7 +132,7 @@ def save_crycle_to_3_array(binarization_arr,coor_arr,index):
                 binarization_arr[index][i][j] = 1 # is 0-base 
     return binarization_arr
 
-def get_track(video_name):
+def get_track(video_name,width,hight,half_track_width):
     binarization_arr = [] # [nwo_number][hight][width]
     right_hand = []
     cap = cv2.VideoCapture(str(video_name))
@@ -155,9 +152,9 @@ def get_track(video_name):
             if not success:
                 print("video end.")
                 for i in range(len(right_hand)):
-                    binarization_arr = save_crycle_to_3_array(binarization_arr,right_hand,i)
+                    binarization_arr = save_crycle_to_3_array(binarization_arr,right_hand,i,width,hight,half_track_width)
                 for i in range(1,len(right_hand)):
-                    image,binarization_arr=draw_and_save_circle_link_poly(image,right_hand[i-1],right_hand[i],i,binarization_arr,1)
+                    image,binarization_arr=draw_and_save_circle_link_poly(image,right_hand[i-1],right_hand[i],i,binarization_arr,1,half_track_width)
                     cv2.imshow('MediaPipe Pose', image)
                     if cv2.waitKey(5) & 0xFF == 27:
                         break
@@ -198,12 +195,14 @@ def get_track(video_name):
                 results.pose_landmarks,
                 mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()) 
-            image = draw_circle(img,right_hand,-1)
+            image = draw_circle(img,right_hand,-1,half_track_width)
             image = draw_dot(image,right_hand)
             # Flip the image horizontally for a selfie-view display.
-            cv2.namedWindow('MediaPipe Pose', 0)
-            cv2.resizeWindow('MediaPipe Pose', width,hight)
+            #cv2.namedWindow('MediaPipe Pose', 0)
+            #cv2.resizeWindow('MediaPipe Pose', width,hight)
             cv2.imshow('MediaPipe Pose', image)
             if cv2.waitKey(5) & 0xFF == 27:
                 break
+    cap.release()
+    cv2.destroyAllWindows()
     
