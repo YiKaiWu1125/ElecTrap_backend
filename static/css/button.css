@@ -29,8 +29,15 @@
   touch-action: manipulation;
   width: 200px;
   height: 100px;
-  position: absolute;
+}
 
+.back-btn {
+  position: fixed;
+  bottom: 5%;
+  right: 2%;
+  width: 130px;
+  height: 80px;
+  font-size: 40px;
 }
 
 .clkbutton:hover {
@@ -40,4 +47,17 @@
 
 .clkbutton:focus {
   box-shadow: rgb(255, 248, 248) 2px 8px 4px -6px;
+}
+
+.titlesize {
+  font-size:50px;
+  font-family: "STZhongsong";
+}
+
+.submitbt {
+  width: 165px;
+  height: 80px;
+  font-size: 40px;
+
+
 }
