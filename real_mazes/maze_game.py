@@ -11,6 +11,18 @@ import matplotlib.pyplot as plt # plt 用於顯示圖片
 import matplotlib.image as mpimg # mpimg 用於讀取圖片
 import numpy as np
 
+def record_fps(img,pTime):
+    # 記錄執行時間
+    cTime = time.time()
+    # 計算fps
+    fps = 1 / (cTime - pTime)
+    # 重置起始時間
+    pTime = cTime
+    # 把fps顯示再窗口上；img畫板；取整的fps值；顯示位置的坐標；設置字體；字體比例；顏色；厚度
+    cv2.putText(img, "fps:"+str(int(fps)), (1750, 70),
+                cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+    return img,pTime
+
 
 def zero_to_one(x): # 使其在0~1間
     if x > 1.0 :
@@ -101,6 +113,7 @@ def begin_maze_gmae(camera_id,picture_name,width,hight):
     game_end_time = 0 
     game_begin_time = 0 
     x = y = 0
+    pTime = 0 # 計算fps用
 
     with mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
@@ -150,6 +163,7 @@ def begin_maze_gmae(camera_id,picture_name,width,hight):
             img,sta,game_begin_time,game_end_time = maze_judgment_status(img,unit8_img,binarization_arr,x,y,sta,game_begin_time,game_end_time)
 
             img=cv2.rectangle(img,(x-5,y-5),(x+5,y+5),(0,0,255),5)   # 畫出手的位置
+            img,pTime=record_fps(img,pTime) #畫出fps
 
             cv2.imshow('maze_game', img)
             if cv2.waitKey(5) & 0xFF == 27:
@@ -161,7 +175,7 @@ def begin_maze_gmae(camera_id,picture_name,width,hight):
     cv2.destroyAllWindows()                 
 
 if __name__ == '__main__':
-    camera_id = 1#'test.mp4'
+    camera_id = 0#'test.mp4'
     picture_name = 'easy.png'
     width = 1920
     hight = 1080
