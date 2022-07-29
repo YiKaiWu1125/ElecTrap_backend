@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, Response, request
 
-import mediapipe_processor
+import maze_game_processor
 
-Camera = mediapipe_processor.Camera
+Camera = maze_game_processor.Camera
 
 app = Flask(__name__)
 

@@ -6,10 +6,10 @@ import cv2
 from base_camera import BaseCamera
 from solution import Solution
 
-
 class Processor:
     def __init__(self, mode):
         def init_val():
+            self.camera_id = 0  # 選擇電腦相機id
             self.x = -100.0
             self.y = -100.0
             self.pTime = 0  # 處理一張圖像前的時間
@@ -23,8 +23,6 @@ class Processor:
             self.up_down_range = 100  # 電管上下可移動的範圍
             self.cap = cv2.VideoCapture(self.camera_id)
             self.solution = Solution(mode)
-
-        self.camera_id = 0  # 選擇電腦相機id
         init_val()
 
     def capture(self, flip=False):

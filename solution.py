@@ -26,7 +26,7 @@ class Solution:
             landmark = results.pose_landmarks.landmark[31]
         elif self.mode == 'head':
             landmark = results.pose_landmarks.landmark[0]
-        return landmark.x * w, landmark.y * h
+        return Solution.is_in_range(landmark.x, w, landmark.y, h) # 當為(-1,-1)時，代表偵測部位已超出鏡頭視野
 
     def draw_landmarks(self, image, results):
         if self.mode == 'hands':
@@ -45,6 +45,11 @@ class Solution:
                 mp.solutions.pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style()
             )
+    
+    def is_in_range(x,w,y,h): 
+        if x < 0 or x > 1 or y < 0 or y > 1 :
+            return -1,-1
+        return int(x * w),int(y * h) 
 
     @property
     def processor(self):
