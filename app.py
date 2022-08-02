@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, Response, request
 
-import maze_game_processor
+import maze_video_processor
 
-Camera = maze_game_processor.Camera
+Camera = maze_video_processor.Camera
 
 app = Flask(__name__)
 
@@ -40,13 +40,13 @@ def gen(camera):
 
 @app.route('/', methods=['POST'])
 def pose():
-    Camera.processor.change_sol(request.values['pose'])
+    Camera.playvideo_and_getcoordinate.change_sol(request.values['pose'])
     return render_template('demo.html')
 
 
 @app.route('/video_feed')
 def video_feed():
-    if Camera.processor is None:
+    if Camera.playvideo_and_getcoordinate is None:
         return None
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(gen(Camera()),
