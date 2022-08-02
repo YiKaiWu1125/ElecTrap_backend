@@ -9,6 +9,9 @@ import cv2
 from base_camera import BaseCamera
 from solution import Solution
 
+import asyncio
+import websockets
+
 
 class Processor:
     def __init__(self, mode):
@@ -25,6 +28,8 @@ class Processor:
             self.game_begin_time = 0
             self.game_end_time = 0
             self.transparent = 125
+            self.websocket_url = 'ws://localhost:8765'
+            self.even_loop = asyncio.get_event_loop() #建立一個Event Loop
             open_camera() 
             self.solution = Solution(mode)
 
@@ -90,18 +95,26 @@ class Processor:
             if x > 1835 and x < 1885 and y > 15 and y < 65:
                 return True
             return False
+
+        async def websocket_send(str):
+            async with websockets.connect(self.websocket_url) as websocket:
+                await websocket.send(str)
+
         if getattr(results, self.solution.landmarks_name):
             self.x, self.y = self.solution.get_landmarks(self.w, self.h, results)
         if self.x != -1 and self.y != -1:
             if is_in_end(self.x,self.y) == True and self.sta == 'playing': 
                 self.sta = 'game_over'
                 self.game_end_time = time.time() 
+                self.even_loop.run_until_complete(websocket_send("successful play game."))
             elif is_in_begin(self.x,self.y) == True and self.sta != 'playing':
                 self.sta = 'playing'
                 self.game_begin_time = time.time() 
             elif self.sta == 'playing' :
                 if self.binarization_arr[self.x][self.y] != 1:
                     self.sta = 'prepare_begin'
+                    self.even_loop.run_until_complete(websocket_send("hit the pipe."))
+
         else:
             self.sta = 'prepare_begin'
 
@@ -137,7 +150,6 @@ class Processor:
             # 畫出終止位置框
             image = cv2.rectangle(image, (1835,15), (1885,65), (255,255,0), thickness=-1)  # end
             image = cv2.circle(image, (self.x,self.y), 20, (255,0,0), -1)#end circle
-            pass
         if self.sta == 'game_over':
             cv2.putText(image, "score:" + str(int(self.game_end_time - self.game_begin_time)) + " s.",
                         (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)  # 檢視成績
@@ -147,6 +159,8 @@ class Processor:
 
     def change_sol(self, mode):
         self.next_sol_mode = mode
+
+
 
 
 class Camera(BaseCamera):
