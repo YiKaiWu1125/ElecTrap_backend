@@ -14,6 +14,11 @@ python -m venv venv
 . venv/bin/activate
 pip install -r requirements.txt
 ```
+### Install Redis on Windows
+```
+Tutorial <https://marcus116.blogspot.com/2019/02/how-to-install-redis-in-windows-os.html>
+
+```
 
 ### Run it
 
