@@ -40,6 +40,18 @@
   font-size: 40px;
 }
 
+.music-btn {
+  position: fixed;
+  bottom:3%;
+  left:2%;
+}
+
+.sub-btn {
+  width: 160px;
+  height: 60px;
+  font-size: 32px;
+}
+
 .clkbutton:hover {
   box-shadow: rgb(234, 227, 227) 2px 8px 8px -5px;
   transform: translate3d(0, 2px, 0);
@@ -50,7 +62,7 @@
 }
 
 .titlesize {
-  font-size:50px;
+  font-size:45px;
   font-family: "STZhongsong";
 }
 
