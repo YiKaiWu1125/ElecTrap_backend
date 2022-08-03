@@ -98,6 +98,7 @@ def maze_judgment_status(img,unit8_img,binarization_arr,x,y,sta,game_begin_time,
 def begin_maze_gmae(camera_id,picture_name,width,hight):
     binarization_arr , unit8_img = read_picture(picture_name,width,hight)
     cap = cv2.VideoCapture(camera_id)
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
     #挑整與顯示畫質
     wi = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     hi = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)

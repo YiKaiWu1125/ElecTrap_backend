@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>ElecTrap 樂齡挑戰</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.min.css') }}" >
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/scoreboard.css') }}" >
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/select.css') }}" >
+    </head>
+
+    <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='/js/scoreboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='/js/playbgm.js') }}"></script>
+    <script id="rendered-js"></script>
+    <script>
+      window.console = window.console || function(t) {};
+    </script>
+    <script>
+      if (document.location.search.match(/type=embed/gi)) {
+        window.parent.postMessage("resize", "*");
+      }
+    </script>
+    <body translate="no">
+        <div class="background-animation">
+            <div class="music-btn">
+                <audio id="music2" src="/static/bgm/bgm.mp3"  loop="loop"></audio>    
+                <a href="javascript:playPause();" style="background:none"><img src="{{url_for('static',filename='/images/pause.png')}}" width="35" height="35" id="music_btn2"></a>
+            </div>
+            <div class="sky text container">
+                <p class="col text-center">排行榜 TOP10</p>
+                <br>
+                <form method="POST" action="{{url_for('getselectinfo')}}">
+                    <div class="row control-group">
+                        <div class="col-2"></div>
+                        <div class="col selectform">
+                            <select name="game_mode">
+                                <option value="warmup">暖身模式</option>
+                                <option value="master">大神模式</option>
+                            </select>
+                        </div>
+                        <div class="col selectform">
+                            <select name="game_body">
+                                <option value="hands">手</option>
+                                <option value="elbow">手肘</option>
+                                <option value="foot">腳</option>
+                                <option value="head">頭</option>
+                            </select>
+                        </div>
+                        <div class="col selectform">
+                            <select name="game_level">
+                                <option value="1">Level 1</option>
+                                <option value="2">Level 2</option>
+                                <option value="3">Level 3</option>
+                                <option value="4">Level 4</option>
+                                <option value="5">Level 5</option>
+                                <option value="6">Level 6</option>
+                                <option value="7">Level 7</option>
+                                <option value="8">Level 8</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <!-- TODO: Rewrite this by frontend -->
+                            <input type="submit" class="clkbutton sub-btn" value="submit"/>
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+                </form>    
+                <br>
+                <div class="">
+                    <table class="tcontainer">
+                        <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>姓名</th>
+                            <th>遊戲模式</th>
+                            <th>身體部位</th>
+                            <th>關卡</th>
+                            <th>秒數</th>
+                        </tr>
+                        </thead>
+                        <tbody> 
+                        {% for row in data %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{ row[1]}}</td>
+                            <td>{{ row[2] }}</td>
+                            <td>{{ row[3] }}</td>
+                            <td>{{ row[4] }}</td>
+                            <td>{{ row[5] }}</td>    
+                        </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="stars"></div>
+                <div class="stars1"></div>
+                <div class="stars2"></div>
+                <div class="shooting-stars"></div>
+            </div>
+            <button type="button" class="clkbutton back-btn" role="button" 
+            onclick="javascript:history.back()">back</button>
+        </div>
+    </body>
+</html>
