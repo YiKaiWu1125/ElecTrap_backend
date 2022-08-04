@@ -29,7 +29,7 @@
     <div class="sky text container">
       <p class="col text-center option">開始您的遊戲</p>
       <p class="col text-center titlesize">遊戲模式</p>
-      <form action="{{url_for('getgameinfo')}}" method="post" >
+      <form method="post" action="{{ url_for('play') }}">
         <div class="row control-group">
           <div class="col-4"></div>
           <label class="col control control-radio option">
@@ -120,7 +120,9 @@
         <div class="row">
           <div class="col-5"></div>
           <div class="col-2">
-            <input type="submit" class="clkbutton submitbt"  />
+            <button type="submit" class="clkbutton submitbt" role="button" >
+              Submit
+            </button>
           </div>
           <div class="col-5"></div>
         </div>

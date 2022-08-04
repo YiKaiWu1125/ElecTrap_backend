@@ -16,6 +16,26 @@
         window.parent.postMessage("resize", "*");
       }
     </script>
+
+    <!--  JQuery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+          integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Socket.IO CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"
+          integrity="sha512-WL6WGKMPBiM9PnHRYIn5YEtq0Z8XP4fkVb4qy7PP4vhmYQErJ/dySyXuFIMDf1eEYCXCrQrMJfkNwKc9gsjTjA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+    	#video {
+    		transform: rotateY(180deg);
+    		-webkit-transform:rotateY(180deg); /* Safari and Chrome */
+    		-moz-transform:rotateY(180deg); /* Firefox */
+        display: none;
+    	}
+    </style>
+
   </head>
   <body translate="no" >
     <div class="background-animation">
@@ -31,26 +51,39 @@
           </div>
           <div class="col"></div>  
         </div>
-        <p class="col text-center">Select Pose Type</p>
-        <form class="row" method="POST" action="{{ url_for('pose') }}">
-          <div class="col-3"></div>
-          <div class="col-2">
-            <button type="submit" class="clkbutton" name="pose" value="hands"> Hands </button>
-          </div>
-          <div class="col-2">
-            <button type="submit" class="clkbutton" name="pose" value="foot"> Foot </button>
-          </div>
-          <div class="col-2">
-            <button type="submit" class="clkbutton" name="pose" value="head"> Head </button>
-          </div>
-          <div class="col-3"></div>
-        </form>
         <div class="stars"></div>
         <div class="stars1"></div>
         <div class="stars2"></div>
         <div class="shooting-stars"></div>
+        <div id="container">
+          <canvas id="canvasOutput"></canvas>
+          <video autoplay="true" id="videoElement"></video>
+        </div>
+        <div id="container">
+          <video autoplay playsinline id="videoElement" hidden></video>
+          <canvas id="canvas"></canvas>
+        </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="gameover" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="gameoverLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="gameoverLabel">Game Over</h5>
+          </div>
+          <div class="modal-body">
+            Game Over
+          </div>
+          <div class="modal-footer">
+            <a href="{{ url_for('index') }}" class="btn btn-primary"> Back to home </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/demo.js') }}"></script>
   </body>
 </html>
 
