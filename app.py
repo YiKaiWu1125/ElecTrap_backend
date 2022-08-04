@@ -9,8 +9,12 @@ import cv2
 from flask import Flask, render_template, Response, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
+from engineio.payload import Payload
 
 import mediapipe_processor
+
+
+Payload.max_decode_packets = 500
 
 Camera = mediapipe_processor.Camera
 
