@@ -1,26 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>ElecTrap 樂齡挑戰</title>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.min.css') }}" >
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/radiobt.css') }}" >
+{% extends 'base.html' %}
 
-  <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='/js/playbgm.js') }}"></script>
-  <script>
-    window.console = window.console || function(t) {};
-  </script>
-  <script>
-    if (document.location.search.match(/type=embed/gi)) {
-      window.parent.postMessage("resize", "*");
-    }
-  </script>
-</head>
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/radiobt.css')}}">
+{% endblock %}
 
-<body translate="no" >
+{% block content %}
   <div class="background-animation">
     <div class="music-btn">
       <audio id="music2" src="/static/bgm/bgm.mp3"  loop="loop">你的瀏覽器不支援audio標籤。</audio>    
@@ -86,7 +70,7 @@
           </label>
           <label class="col-2 control control-radio levelfont">
             Level 3
-            <input type="radio" name="game_level"  value=3/>
+            <input type="radio" name="game_level"  value=3 />
             <div class="control_indicator"></div>
           </label>
           <label class="col-2 control control-radio levelfont">
@@ -136,5 +120,4 @@
     <button type="button" class="clkbutton back-btn" role="button" 
       onclick="javascript:history.back()">back</button>
   </div>
-</body>
-</html>
+{% endblock %}
