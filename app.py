@@ -16,7 +16,6 @@ from models import *
 
 Payload.max_decode_packets = 500
 
-Camera = mediapipe_processor.Camera
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -30,7 +29,7 @@ class SocketIOFilter(logging.Filter):
 log = logging.getLogger('werkzeug')
 log.addFilter(SocketIOFilter())
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:8543abcd@localhost/ElecTrap_scoreboard'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@localhost/ElecTrap_scoreboard'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'secret string'
 
@@ -56,7 +55,7 @@ def play():
     entry = UserInfo(name, game_mode, game_body, game_level, 1000)
     db.session.add(entry)
     db.session.commit()
-    Camera.processor.sta = 'playing'
+
     Camera.processor.change_sol(request.form['game_body'])
     Camera.processor.reset()
     return render_template('play.html')
@@ -89,6 +88,10 @@ def gen(camera):
         if hasattr(Camera.processor, 'gameover'):
             delattr(Camera.processor, 'gameover')
             socketio.emit('gameover', {'data': 'gameover'})
+        if hasattr(Camera.processor, 'out_pipe'):
+            delattr(Camera.processor, 'out_pipe')
+            print("out_pipe.")
+            socketio.emit('out_pipe', {'data': 'out_pipe'})
         yield b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n--frame\r\n'
 
 
