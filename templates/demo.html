@@ -1,22 +1,5 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>ElecTrap 樂齡挑戰</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/background.css') }}" >
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/button.css') }}" >
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/bootstrap.min.css') }}" >
-    <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='/js/playbgm.js') }}"></script>
-    <script>
-      window.console = window.console || function(t) {};
-    </script>
-    <script>
-      if (document.location.search.match(/type=embed/gi)) {
-        window.parent.postMessage("resize", "*");
-      }
-    </script>
-
+{% extends 'base.html' %}
+{% block head %}
     <!--  JQuery CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
           integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
@@ -35,9 +18,9 @@
         display: none;
     	}
     </style>
+{% endblock %}
 
-  </head>
-  <body translate="no" >
+{% block content %}
     <div class="background-animation">
       <div class="music-btn">
         <audio id="music2" src="/static/bgm/bgm.mp3"  loop="loop">你的瀏覽器不支援audio標籤。</audio>    
@@ -84,10 +67,4 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/demo.js') }}"></script>
-  </body>
-</html>
-
-
-
-
-
+{% endblock %}
