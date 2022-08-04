@@ -3,7 +3,6 @@ import base64
 import logging
 
 import numpy as np
-import psycopg2
 import redis
 import cv2
 from flask import Flask, render_template, Response, request
@@ -11,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 
 import mediapipe_processor
+from models import *
 
 Camera = mediapipe_processor.Camera
 
@@ -32,28 +32,8 @@ app.secret_key = 'secret string'
 
 db = SQLAlchemy(app)
 
-con = psycopg2.connect(database="ElecTrap_scoreboard", user="postgres",
-                       password="8543abcd", host="127.0.0.1", port="5432")
-cursor = con.cursor()
 
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-
-
-class UserInfo(db.Model):
-    __tablename__ = 'userinfo'
-    user_id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.String(20))
-    game_mode = db.Column(db.String(20))
-    game_body = db.Column(db.String(20))
-    game_level = db.Column(db.Integer)
-    score = db.Column(db.Integer)
-
-    def __init__(self, user_name, game_mode, game_body, game_level, score):
-        self.user_name = user_name
-        self.game_mode = game_mode
-        self.game_body = game_body
-        self.game_level = game_level
-        self.score = score
 
 
 @app.route('/')
@@ -62,7 +42,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/demo', methods=['POST'])
+@app.route('/play', methods=['POST'])
 def play():
     """Video streaming home page."""
     name = r.get('user_name')
@@ -75,7 +55,7 @@ def play():
     Camera.processor.sta = 'playing'
     Camera.processor.change_sol(request.form['game_body'])
     Camera.processor.reset()
-    return render_template('demo.html')
+    return render_template('play.html')
 
 
 @app.route('/gamemode')
@@ -84,23 +64,9 @@ def gamemode():
     return render_template('gamemode.html')
 
 
-@app.route("/rank", methods=['post', 'get'])
+@app.route("/rank")
 def rank():
-    cursor.execute(
-        "SELECT * FROM userinfo WHERE game_mode='warmup' ORDER BY score ASC LIMIT 10;")
-    result = cursor.fetchall()
-    return render_template("rank.html", data=result)
-
-
-@app.route("/getselectinfo", methods=['post', 'get'])
-def getselectinfo():
-    mode = request.form["game_mode"]
-    body = request.form["game_body"]
-    level = request.form["game_level"]
-    # FIXME: May cause SQL injection
-    cursor.execute("SELECT * FROM userinfo WHERE userinfo.game_mode='{}' AND userinfo.game_body='{}' AND userinfo.game_level={} ORDER BY score ASC LIMIT 10;".format(mode, body, level))
-    result = cursor.fetchall()
-    return render_template("rank.html", data=result)
+    return render_template("rank.html")
 
 
 @app.route('/getusername', methods=['POST'])
@@ -141,6 +107,17 @@ def image(data_image):
     nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     Camera.processor.image = img
+
+
+@socketio.on('score')
+def score(form):
+    result = []
+    for user in UserInfo.query.filter_by(
+        **form).order_by(UserInfo.score.asc()).limit(10).all():
+        user_dict = vars(user)
+        user_dict.pop('_sa_instance_state', None)
+        result.append(user_dict)
+    socketio.emit('scoreUpdate', {'data': result})
 
 
 if __name__ == '__main__':
