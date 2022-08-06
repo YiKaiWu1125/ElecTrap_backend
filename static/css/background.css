@@ -20,6 +20,37 @@ html body {
   align-items: center;
 }
 
+.rocket {
+  position:fixed;
+  left:20%;
+  bottom:15%;
+  animation-iteration-count: 2;
+
+}
+
+@keyframes alien {
+  from {
+    right:5%;
+  }
+  to {
+    right:50%;
+  }
+}
+
+.alien {
+  position:fixed;
+  bottom:0;
+  right:5%;
+  animation-name:alien;
+  animation-duration:5s;
+  animation-direction:alternate-reverse;
+
+}
+
+.animate__animated.animate__bounce {
+  --animate-duration: 2s;
+}
+
 .background-animation .text {
   color: #FFF;
   font-size: 20px;

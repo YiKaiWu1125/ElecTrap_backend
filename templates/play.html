@@ -18,6 +18,7 @@
         display: none;
     	}
     </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/lightning.css') }}" >
 {% endblock %}
 
 {% block content %}
@@ -26,11 +27,28 @@
         <audio id="music2" src="/static/bgm/bgm.mp3"  loop="loop">你的瀏覽器不支援audio標籤。</audio>    
         <a href="javascript:playPause();"><img src="{{url_for('static',filename='/images/pause.png')}}" width="35" height="35" id="music_btn2" ></a>
       </div>
+        <div class="d-block position-absolute w-100 top-0">
+          <div class="d-flex justify-content-between p-2">
+          <img class="crack1 lightning flashing" src="{{url_for('static',filename='/images/redlight.png')}}" >
+          <img class="crack2 lightning flashing" src="{{url_for('static',filename='/images/greenlight.png')}}" >
+          <img class="crack3 lightning flashing" src="{{url_for('static',filename='/images/purplelight.png')}}" >
+          <img class="crack4 lightning flashing" src="{{url_for('static',filename='/images/bluelight.png')}}" >
+          </div>
+        </div>
       <div class="sky text container">
-        <div class="row">
+        <div class="row position-relative">
           <div class="col"></div>
-          <div class="col">
-            <img src="{{ url_for('video_feed') }}">
+          {% for n in range(5) %}
+            <div class="col-1">
+              <img id="heart{{n}}" src="{{ url_for('static', filename='/images/heart.png') }}" width="80" height="80" onclick="heartBroken(this);">
+            </div>
+          {% endfor %}
+          <div class="col"></div>
+        </div>
+        <div class="row position-relative">
+          <div class="col"></div>
+          <div class="col" >
+            <img src="{{ url_for('video_feed') }}" >
           </div>
           <div class="col"></div>  
         </div>
@@ -65,6 +83,6 @@
         </div>
       </div>
     </div>
-
-    <script src="{{ url_for('static', filename='js/demo.js') }}"></script>
+    <script src="{{ url_for('static', filename='/js/HitPoint.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/play.js') }}"></script>
 {% endblock %}
