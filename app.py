@@ -55,9 +55,7 @@ def play():
     entry = UserInfo(name, game_mode, game_body, game_level, 1000)
     db.session.add(entry)
     db.session.commit()
-
-    Camera.processor.change_sol(request.form['game_body'])
-    Camera.processor.reset()
+    Camera.change_game(game_mode, game_body)
     return render_template('play.html')
 
 

@@ -6,11 +6,11 @@ from game import Game
 
 
 class TubeGame(Game):
-    def __init__(self, mode='hands'):
-        self.reset(mode)
+    def __init__(self, body='hands'):
+        self.reset(body)
 
-    def reset(self, mode):
-        super().reset(mode)
+    def reset(self, body):
+        super().reset(body)
         self.run = 0
         self.run_val = 0.5  # speed of the tube moving
         self.up_down_range = 100  # range of the tube moving
