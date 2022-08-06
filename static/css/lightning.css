@@ -1,54 +1,39 @@
-
-
 @keyframes flash_light {
     0% {
         height: 0px;
         opacity: 0.5;
     }
+
     7.5% {
-        height: 320px;
+        height: 20vw;
     }
-    8%, 12%, 16% {
+
+    8%,
+    12%,
+    16% {
         opacity: 0.5;
     }
-    10%,  14% {
+
+    10%,
+    14% {
         opacity: 1;
     }
+
     50% {
         opacity: 0;
     }
+
     100% {
-        height: 320px;
-        opacity: 0;
+        height: 20vw;
+        opacity: 1;
     }
 }
-.lightning div img {
-    display: block;
-    margin: auto;
-    width: 100%;
-}
-.lightning .lightning1 {
-    position: absolute;
-    top:0;
-    left:0;
-    animation: flash_light 3s;
-}
-.lightning .lightning2 {
-    position: absolute;
-    top:0;
-    right: 50%;
-    animation: flash_light 3s;
+
+.lightning {
+    width: 20vw;
+    height: 20vw;
 }
 
-.lightning .lightning3 {
-    position: absolute;
-    left: 60%;
-    top:0;
-    animation: flash_light 3s;
-}
-.lightning .lightning4 {
-    position: absolute;
-    right: 0;
-    top:0;
+.lightning.flashing {
     animation: flash_light 3s;
 }

@@ -49,11 +49,6 @@ def index():
 @app.route('/play', methods=['POST'])
 def play():
     """Video streaming home page."""
-    dic1 = {"heart" : "changeImage()",
-             "heart1": "changeImage1()",
-             "heart2": "changeImage2()",
-             "heart3": "changeImage3()",
-             "heart4": "changeImage4()"}
     name = r.get('user_name')
     game_mode = request.form["game_mode"]
     game_body = request.form["game_body"]
@@ -64,7 +59,7 @@ def play():
     Camera.processor.sta = 'playing'
     Camera.processor.change_sol(request.form['game_body'])
     Camera.processor.reset()
-    return render_template('play.html', dic1=dic1)
+    return render_template('play.html')
 
 
 @app.route('/gamemode')
