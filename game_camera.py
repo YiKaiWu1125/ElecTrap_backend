@@ -25,7 +25,9 @@ class Camera(BaseCamera):
                             image = re_image
                             results = re_results   
                     if game.read == 1:
-                        image = game.video_draw(results, image)
+                        re_image = game.video_draw(results, image)
+                    if game.read == 1:
+                        image = re_image
                 if (Camera.game_type == 'tube' or Camera.game_type == 'maze') or ((Camera.game_type == 'video' or Camera.game_type == 'battle') and game.read == 0):
                     game.calc(results)
                     image = game.draw(results, image)
