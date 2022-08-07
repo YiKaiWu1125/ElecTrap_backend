@@ -15,7 +15,7 @@
       <p class="col text-center titlesize">遊戲模式</p>
       <form method="post" action="{{ url_for('play') }}">
         <div class="row control-group">
-          <div class="col-4"></div>
+          <div class="col-2"></div>
           <label class="col control control-radio option">
             電流急急棒
             <input type="radio" name="game_mode" value="tube" checked="checked" />
@@ -26,7 +26,17 @@
             <input type="radio" name="game_mode" value="maze" />
             <div class="control_indicator"></div>
           </label>
-          <div class="col-4"></div>
+          <label class="col control control-radio option">
+            暖身模式
+            <input type="radio" name="game_mode" value="video" />
+            <div class="control_indicator"></div>
+          </label>
+          <label class="col control control-radio option">
+            對戰模式
+            <input type="radio" name="game_mode" value="battle" />
+            <div class="control_indicator"></div>
+          </label>
+          <div class="col-2"></div>
         </div>
         <br>
         <p class="col text-center titlesize">身體部位</p>
