@@ -52,6 +52,7 @@ class Game:
                 return int(fps)
 
         image.flags.writeable = True
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         cv2.putText(image, f'FPS: {calc_fps()}', (10, 70),
                     cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
         if getattr(results, self.solution.landmarks_name):
