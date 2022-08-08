@@ -22,7 +22,6 @@ class Game:
         self.status = 'prepare_begin'
         self.pTime = self.cTIme = 0
         self.begin_time = self.end_time = 0
-        self.life = 5
         self.solution = Solution(body)
 
     def capture(self, flip=False):
@@ -32,7 +31,7 @@ class Game:
         image = self.image.copy()
         # FIXME: Too high resolution cause low FPS, the client only need 1280x720.
         image = cv2.resize(image, (1920, 1080))
-        self.w, self.h = image.shape[1], image.shape[0]
+        self.h, self.w = image.shape[:2]
         image = cv2.flip(image, 1) if flip else image
         image.flags.writeable = False
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

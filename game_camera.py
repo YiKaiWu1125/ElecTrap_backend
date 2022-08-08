@@ -6,9 +6,14 @@ from battle_game import BattleGame
 
 
 class Camera(BaseCamera):
-    game_mapping = {'tube': TubeGame(), 'maze': MazeGame(), 'video': VideoGame(), 'battle': BattleGame()}
+    game_mapping = {
+        'tube': TubeGame(),
+        'maze': MazeGame(),
+        'video': VideoGame(),
+        'battle': BattleGame()
+    }
     game_type = 'maze'
-    
+
     def __init__(self):
         super(Camera, self).__init__()
 
@@ -18,22 +23,12 @@ class Camera(BaseCamera):
             try:
                 game = Camera.game_mapping[Camera.game_type]
                 results, image = game.capture(flip=True)
-                if (Camera.game_type == 'video' or Camera.game_type == 'battle') and game.read == 1:
-                    if Camera.game_type == 'video':
-                        re_results, re_image = game.video_capture(flip=True)
-                        if re_results != "":
-                            image = re_image
-                            results = re_results   
-                    if game.read == 1:
-                        re_image = game.video_draw(results, image)
-                    if game.read == 1:
-                        image = re_image
-                if (Camera.game_type == 'tube' or Camera.game_type == 'maze') or ((Camera.game_type == 'video' or Camera.game_type == 'battle') and game.read == 0):
-                    game.calc(results)
-                    image = game.draw(results, image)
+                game.calc(results)
+                image = game.draw(results, image)
                 yield image
-            except AttributeError as n:
-                print("錯誤原因:",n)
+            except AttributeError as e:
+                if 'No image' not in e.args[0]:
+                    raise e
 
     @staticmethod
     def set_image(image):
