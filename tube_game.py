@@ -35,6 +35,7 @@ class TubeGame(Game):
                     self.print_string = 'successful'
                 if not(50 <= self.x <= 600 and 150 + self.run <= self.y <= 200 + self.run):
                     self.outpipe = True
+                    self.life -= 1
                     self.status = 'prepare_begin'
                     self.r_string = 'Fail <again>'
             if self.status in ['prepare_begin', 'playing'] and self.begin_time != 0:
@@ -42,8 +43,13 @@ class TubeGame(Game):
                     str(int(time.time() - self.begin_time)) + ">"
         elif self.status == 'playing':
             self.outpipe = True
+            self.life -= 1
             self.status = 'prepare_begin'
             self.r_string = 'Fail <again>'
+            
+        if self.life <= 0 and self.status != 'game_over':
+            self.status = 'game_over'
+            self.gameover = True
 
     def draw(self, results, image):
         image = super().draw(results, image)

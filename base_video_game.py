@@ -17,6 +17,7 @@ class BaseVideoGame(Game):
             if self.status == "playing":
                 self.now_number = 0
                 self.out_pipe = True
+                self.life -= 1
                 self.status = "prepare_begin"
 
         else :
@@ -53,7 +54,12 @@ class BaseVideoGame(Game):
                 if k == True:
                     self.now_number = 0
                     self.out_pipe = True
+                    self.life -= 1
                     self.status = "prepare_begin"
+
+        if self.life <= 0 and self.status != 'game_over':
+            self.status = 'game_over'
+            self.gameover = True
 
     def draw(self, results, image):
         def draw_pipe(image):#image,coor_a, coor_b, index, open_save

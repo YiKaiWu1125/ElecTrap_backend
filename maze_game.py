@@ -55,9 +55,16 @@ class MazeGame(Game):
             elif self.status == 'playing':
                 if is_touched(self.x, self.y):
                     self.outpipe = True
+                    self.life -= 1
                     self.status = 'prepare_begin'
-        elif self.status != 'game_over':
+        elif self.status == 'playing':
             self.status = 'prepare_begin'
+            self.life -= 1
+        
+        if self.life <= 0 and self.status != 'game_over':
+            self.status = 'game_over'
+            self.gameover = True
+
 
     def draw(self, results, image):
         image = super().draw(results, image)

@@ -22,6 +22,7 @@ class Game:
         self.status = 'prepare_begin'
         self.pTime = self.cTIme = 0
         self.begin_time = self.end_time = 0
+        self.life = 5
         self.solution = Solution(body)
 
     def capture(self, flip=False):
