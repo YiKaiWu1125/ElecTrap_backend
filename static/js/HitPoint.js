@@ -19,7 +19,7 @@ function heartBroken(element) {
 }
 
 function changeimg(item) {
-    const hey = document.getElementById(item);
-    hey.src = 'static/images/broken-heart.png';
+    const heart = document.getElementById(item);
+    heart.src = 'static/images/broken-heart.png';
     i++;
 }
