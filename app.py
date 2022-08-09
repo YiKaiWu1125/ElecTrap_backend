@@ -10,13 +10,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from engineio.payload import Payload
 
-import mediapipe_processor
 from models import *
+from game_camera import Camera
 
 
 Payload.max_decode_packets = 500
 
-Camera = mediapipe_processor.Camera
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -30,7 +29,7 @@ class SocketIOFilter(logging.Filter):
 log = logging.getLogger('werkzeug')
 log.addFilter(SocketIOFilter())
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:8543abcd@localhost/ElecTrap_scoreboard'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@localhost/ElecTrap_scoreboard'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'secret string'
 
@@ -56,9 +55,7 @@ def play():
     entry = UserInfo(name, game_mode, game_body, game_level, 1000)
     db.session.add(entry)
     db.session.commit()
-    Camera.processor.sta = 'playing'
-    Camera.processor.change_sol(request.form['game_body'])
-    Camera.processor.reset()
+    Camera.change_game(game_mode, game_body)
     return render_template('play.html')
 
 
@@ -86,16 +83,12 @@ def gen(camera):
     yield b'--frame\r\n'
     while True:
         frame = camera.get_frame()
-        if hasattr(Camera.processor, 'gameover'):
-            delattr(Camera.processor, 'gameover')
+        if camera.get_game().check_gameover():
             socketio.emit('gameover', {'data': 'gameover'})
+        if camera.get_game().check_outpipe():
+            socketio.emit('out_pipe', {'data': 'out_pipe'})
+            print("out_pipe")
         yield b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n--frame\r\n'
-
-
-@app.route('/', methods=['POST'])
-def pose():
-    Camera.processor.change_sol(request.values['pose'])
-    return render_template('demo.html')
 
 
 @app.route('/video_feed')
@@ -110,7 +103,7 @@ def image(data_image):
     encoded_data = data_image.split(',')[1]
     nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    Camera.processor.image = img
+    Camera.set_image(img)
 
 
 @socketio.on('score')

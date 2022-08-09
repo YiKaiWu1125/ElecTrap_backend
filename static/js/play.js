@@ -11,8 +11,8 @@ const video = document.querySelector("#videoElement");
 var constraints = {
 	audio: false,
 	video: {
-		width: 640,
-		height: 480
+		width: 1920,
+		height: 1080
 	}
 };
 
