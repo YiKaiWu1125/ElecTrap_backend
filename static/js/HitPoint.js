@@ -1,8 +1,20 @@
 var socket = io.connect(window.location.protocol + '//' + document.domain + ':' + location.port);
 var i=0;
+const heartList=['heart0','heart1','heart2','heart3','heart4'];
+
+function resetLife(){
+    i=0;
+    for(var x=0;x<5;x++){
+        const bkheart =document.getElementById(heartList[x]);
+        bkheart.src ='static/images/heart.png';
+    }
+}
+
 socket.on('out_pipe', function () {
 	console.log("out_pipe", socket.connected)
-    const heartList=['heart0','heart1','heart2','heart3','heart4'];
+    if(i==5){
+        resetLife();
+    }
     heartBroken(heartList[i]);
     changeimg(heartList[i]);
 });
