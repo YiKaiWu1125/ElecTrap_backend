@@ -19,7 +19,7 @@ class BaseVideoGame(Game):
         self.level = level
         self.body = body
         self.half_track_width = 50
-        self.level_max = 100
+        self.level_max = 500
         self.color = (100 ,100 ,100)
         self.binarization_arr = np.zeros(
             self.level_max * 1930 * 1090).reshape((self.level_max, 1930, 1090))
