@@ -24,6 +24,7 @@ class Game:
         self.begin_time = self.end_time = 0
         self.solution = Solution(body)
         self.outtime = 0
+        self.life = 5
 
     def capture(self, flip=False):
         if not hasattr(self, 'image'):
@@ -74,4 +75,7 @@ class Game:
 
     def check_outpipe(self):
         return self.check_something('outpipe')
+
+    def check_heart_reset(self):
+        return self.check_something('heart_reset')
     

@@ -19,8 +19,7 @@ class VideoGame(BaseVideoGame):
             if not ret or len(self.right_hand) >= self.level_max:
                 self.reading = False
                 self.cap.release()
-                return super().capture(not flip)
-            self.read_video = False
+                return super().capture(flip)
             self.h, self.w = image.shape[:2]
             image.flags.writeable = False
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -35,5 +34,8 @@ class VideoGame(BaseVideoGame):
     def draw(self, results, image):
         image = super().video_draw(
             results, image) if self.reading else super().draw(results, image)
+        if self.life <= 0:
+                image = cv2.putText(image, "you are lose", (0, 150),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (42, 82, 254), 3)
         image = cv2.resize(image, (1280, 720))
         return cv2.imencode('.jpg', image)[1].tobytes()

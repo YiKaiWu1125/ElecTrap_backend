@@ -36,6 +36,7 @@ class BaseVideoGame(Game):
                 if self.status == "playing":
                     self.now_number = 0
                     self.outpipe = True
+                    self.life -= 1
                     self.outtime = 20
                     self.status = "prepare_begin"
 
@@ -69,6 +70,7 @@ class BaseVideoGame(Game):
                     if is_out_of_bounds == True:
                         self.now_number = 0
                         self.outpipe = True
+                        self.life -= 1
                         self.outtime = 20
                         self.status = "prepare_begin"
 
@@ -89,44 +91,52 @@ class BaseVideoGame(Game):
         if len(self.right_hand) == 0:
             return cv2.imencode('.jpg', image)[1].tobytes()
 
-        if self.status != "game_over":
-            image = draw_pipe(image)  # 畫出電管
+        if self.life <= 0 :
+            if self.status != 'game_over':
+                self.gameover = True
+                self.status = "game_over"
+            image = cv2.putText(image, "<Game over>", (0, 250),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
 
-        if self.status == "prepare_begin":
-            image = cv2.circle(
-                image,
-                (self.right_hand[0][0], self.right_hand[0][1]),
-                self.half_track_width,
-                (255, 0, 0),
-                -1,
-            )  # 畫出起始位置框
+        else:
+            if self.status != "game_over":
+                image = draw_pipe(image)  # 畫出電管
 
-        if self.status == "playing":
-            cv2.circle(
-                image,
-                (self.right_hand[len(self.right_hand) - 1][0],
-                 self.right_hand[len(self.right_hand) - 1][1]),
-                self.half_track_width,
-                (255, 0, 0),
-                -1,
-            )  # 畫出終止位置框
+            if self.status == "prepare_begin":
+                image = cv2.circle(
+                    image,
+                    (self.right_hand[0][0], self.right_hand[0][1]),
+                    self.half_track_width,
+                    (255, 0, 0),
+                    -1,
+                )  # 畫出起始位置框
 
-        if self.status == "game_over":
-            cv2.putText(
-                image,
-                "score:" + str(int(self.end_time - self.begin_time)) + " s.",
-                (0, 150),
-                cv2.FONT_HERSHEY_PLAIN,
-                5,
-                (260, 25, 240),
-                3,
-            )  # 檢視成績
-            cv2.putText(image, "<Game over>", (0, 250),
-                        cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+            if self.status == "playing":
+                cv2.circle(
+                    image,
+                    (self.right_hand[len(self.right_hand) - 1][0],
+                     self.right_hand[len(self.right_hand) - 1][1]),
+                    self.half_track_width,
+                    (255, 0, 0),
+                    -1,
+                )  # 畫出終止位置框
 
-        if self.x != -1 and self.y != -1:
-            image = cv2.rectangle(image, (self.x - 5, self.y - 5),
-                                  (self.x + 5, self.y + 5), (0, 0, 255), 5)   # 畫出手的位置
+            if self.status == "game_over":
+                cv2.putText(
+                    image,
+                    "score:" + str(int(self.end_time - self.begin_time)) + " s.",
+                    (0, 150),
+                    cv2.FONT_HERSHEY_PLAIN,
+                    5,
+                    (260, 25, 240),
+                    3,
+                )  # 檢視成績
+                cv2.putText(image, "<Game over>", (0, 250),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+
+            if self.x != -1 and self.y != -1:
+                image = cv2.rectangle(image, (self.x - 5, self.y - 5),
+                                      (self.x + 5, self.y + 5), (0, 0, 255), 5)   # 畫出手的位置
         return image
 
 

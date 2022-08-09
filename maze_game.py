@@ -61,39 +61,51 @@ class MazeGame(Game):
                     self.outpipe = True
                     self.outtime = 10
                     self.status = 'prepare_begin'
+                    self.life -= 1
         elif self.status == 'playing':
-            self.status = 'prepare_begin'
+            self.outpipe = True
             self.outtime = 10
+            self.status = 'prepare_begin'
+            self.life -= 1
 
     def draw(self, results, image):
         image = super().draw(results, image)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
+        if self.life <= 0:
+            if self.status != 'game_over':
+                self.gameover = True
+                self.status = "game_over"
+            image = cv2.putText(image, "<Game over>", (0, 250),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+            image = cv2.putText(image, "you are lose", (0, 150),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (42, 82, 254), 3)
+        else:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
 
-        if self.x != -1 and self.y != -1:
-            image = cv2.rectangle(image, (self.x - 5, self.y - 5),
-                                  (self.x + 5, self.y + 5), (0, 0, 255), 5)   # 畫出手的位置
-        if self.status != 'game_over':
-            if self.outtime > 0:
-                image = cv2.addWeighted(image, 0.3, self.outpipe_img, 0.7, 0)
-            elif self.status == 'playing':
-                image = cv2.addWeighted(image, 0.6, self.playing_img, 0.4, 0)
-            else:
-                image = cv2.addWeighted(image, 0.6, self.show_img, 0.4, 0)
-        if self.status == 'prepare_begin':
-            # 畫出起始位置框
-            image = cv2.rectangle(image, (15, 15), (65, 65),
-                                  (255, 255, 0), thickness=-1)  # begin
-            image = cv2.circle(image, (40, 40), 20, (255, 0, 0), -1)  # begin
-        if self.status == 'playing':
-            # 畫出終止位置框
-            image = cv2.rectangle(
-                image, (1835, 15), (1885, 65), (255, 255, 0), thickness=-1)  # end
-            image = cv2.circle(image, (self.x, self.y), 20,
-                               (255, 0, 0), -1)  # end circle
-        if self.status == 'game_over':
-            cv2.putText(image, "score:" + str(int(self.end_time - self.begin_time)) + " s.",
-                        (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)  # 檢視成績
-            cv2.putText(image, "<Game over>", (0, 250),
-                        cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+            if self.x != -1 and self.y != -1:
+                image = cv2.rectangle(image, (self.x - 5, self.y - 5),
+                                      (self.x + 5, self.y + 5), (0, 0, 255), 5)   # 畫出手的位置
+            if self.status != 'game_over':
+                if self.outtime > 0:
+                    image = cv2.addWeighted(image, 0.3, self.outpipe_img, 0.7, 0)
+                elif self.status == 'playing':
+                    image = cv2.addWeighted(image, 0.6, self.playing_img, 0.4, 0)
+                else:
+                    image = cv2.addWeighted(image, 0.6, self.show_img, 0.4, 0)
+            if self.status == 'prepare_begin':
+                # 畫出起始位置框
+                image = cv2.rectangle(image, (15, 15), (65, 65),
+                                      (255, 255, 0), thickness=-1)  # begin
+                image = cv2.circle(image, (40, 40), 20, (255, 0, 0), -1)  # begin
+            if self.status == 'playing':
+                # 畫出終止位置框
+                image = cv2.rectangle(
+                    image, (1835, 15), (1885, 65), (255, 255, 0), thickness=-1)  # end
+                image = cv2.circle(image, (self.x, self.y), 20,
+                                   (255, 0, 0), -1)  # end circle
+            if self.status == 'game_over':
+                cv2.putText(image, "score:" + str(int(self.end_time - self.begin_time)) + " s.",
+                            (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)  # 檢視成績
+                cv2.putText(image, "<Game over>", (0, 250),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
         image = cv2.resize(image, (1280, 720))
         return cv2.imencode('.jpg', image)[1].tobytes()

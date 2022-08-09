@@ -38,6 +38,7 @@ class TubeGame(Game):
                 if not(50 <= self.x <= 600 and 150 + self.run <= self.y <= 200 + self.run):
                     self.outpipe = True
                     self.outtime = 20
+                    self.life -= 1
                     self.status = 'prepare_begin'
                     self.r_string = 'Fail <again>'
             if self.status in ['prepare_begin', 'playing'] and self.begin_time != 0:
@@ -46,42 +47,52 @@ class TubeGame(Game):
         elif self.status == 'playing':
             self.outpipe = True
             self.outtime = 20
+            self.life -= 1
             self.status = 'prepare_begin'
             self.r_string = 'Fail <again>'
 
     def draw(self, results, image):
         image = super().draw(results, image)
-        if self.x > 0.0 and self.y > 0.0:
-            col = 255
-            if self.status == 'playing':
-                col = (0,0,20)
-            else:
-                col = (0,0,175)
-            cv2.rectangle(image, (self.x - 10, self.y - 10),
-                        (self.x + 10, self.y + 10), col, 5)   # 畫出觸碰區
+        if self.life <= 0:
+            if self.status != 'game_over':
+                self.gameover = True
+                self.status = "game_over"
+            image = cv2.putText(image, "<Game over>", (0, 250),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+            image = cv2.putText(image, "you are lose", (0, 150),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (42, 82, 254), 3)
+        else:
+            if self.x > 0.0 and self.y > 0.0:
+                col = 255
+                if self.status == 'playing':
+                    col = (0,0,20)
+                else:
+                    col = (0,0,175)
+                cv2.rectangle(image, (self.x - 10, self.y - 10),
+                            (self.x + 10, self.y + 10), col, 5)   # 畫出觸碰區
 
-        if self.status != "game_over":
-            col = (50, 50, 50 )
+            if self.status != "game_over":
+                col = (50, 50, 50 )
+                if self.status == 'playing':
+                    col = (0, 250, 250)
+                cv2.rectangle(image, (50, 150 + int(self.run)), (600, 200 + int(self.run)),
+                              col, 5)   # 畫出電管
+            if self.status == 'prepare_begin':
+                cv2.rectangle(image, (50, 150 + int(self.run)), (100, 200 + int(self.run)),
+                              (0, 255, 0), 5)   # 畫出起始位置框
             if self.status == 'playing':
-                col = (0, 250, 250)
-            cv2.rectangle(image, (50, 150 + int(self.run)), (600, 200 + int(self.run)),
-                          col, 5)   # 畫出電管
-        if self.status == 'prepare_begin':
-            cv2.rectangle(image, (50, 150 + int(self.run)), (100, 200 + int(self.run)),
-                          (0, 255, 0), 5)   # 畫出起始位置框
-        if self.status == 'playing':
-            self.run += self.run_val
-            if self.run > self.up_down_range or self.run < self.up_down_range * -1:
-              self.run_val = self.run_val * -1
-            cv2.rectangle(image, (550, 150 + int(self.run)), (600, 200 + int(self.run)),
-                          (255, 255, 0), 5)   # 畫出終止位置框
-        if self.status == 'game_over':
-            cv2.putText(image, "score:" + str(int(self.end_time - self.begin_time)) + " s.",
-                        (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)  # 檢視成績
-            cv2.putText(image, "<Game over>", (0, 250),
-                        cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
-        if self.outtime > 0:
-            image = self.draw_outpipe(image)
+                self.run += self.run_val
+                if self.run > self.up_down_range or self.run < self.up_down_range * -1:
+                  self.run_val = self.run_val * -1
+                cv2.rectangle(image, (550, 150 + int(self.run)), (600, 200 + int(self.run)),
+                              (255, 255, 0), 5)   # 畫出終止位置框
+            if self.status == 'game_over':
+                cv2.putText(image, "score:" + str(int(self.end_time - self.begin_time)) + " s.",
+                            (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)  # 檢視成績
+                cv2.putText(image, "<Game over>", (0, 250),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+            if self.outtime > 0:
+                image = self.draw_outpipe(image)
         image = cv2.resize(image, (1280, 720))
         return cv2.imencode('.jpg', image)[1].tobytes()
 
