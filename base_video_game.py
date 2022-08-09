@@ -27,52 +27,53 @@ class BaseVideoGame(Game):
     def calc(self, results):
         self.x = self.y = -1
         self.color = (100 ,100 ,100)
-        if getattr(results, self.solution.landmarks_name):
-            self.x, self.y = self.solution.get_landmarks(
-                self.w, self.h, results)
+        if not self.reading:
+            if getattr(results, self.solution.landmarks_name):
+                self.x, self.y = self.solution.get_landmarks(
+                    self.w, self.h, results)
 
-        if self.x == -1 and self.y == -1:
-            if self.status == "playing":
-                self.now_number = 0
-                self.out_pipe = True
-                self.outtime = 20
-                self.status = "prepare_begin"
-
-        else:
-            front = self.now_number - 3
-            end = self.now_number + 3
-            front = max(0, front)
-            end = min(end, len(self.right_hand) - 1)
-
-            if self.now_number == len(self.right_hand) - 1:
-                if self.status != "game_over":
-                    self.status = "game_over"
-                    # self.gameover = True
-                    self.end_time = time.time()
-
-            elif self.now_number == 0:
-                if self.binarization_arr[0][self.x][self.y]:
-                    if self.begin_time == 0:
-                        self.begin_time = time.time()
-                    self.now_number = 1
-                    self.status = "playing"
-
-            elif self.status == 'playing':
-                is_out_of_bounds = True
-                for i in range(end, front - 1, -1):
-                    if self.binarization_arr[i][self.x][self.y]:
-                        self.now_number = i
-                        is_out_of_bounds = False
-                        break
-
-                if is_out_of_bounds == True:
+            if self.x == -1 and self.y == -1:
+                if self.status == "playing":
                     self.now_number = 0
-                    self.out_pipe = True
+                    self.outpipe = True
                     self.outtime = 20
                     self.status = "prepare_begin"
-        
-        if self.outtime > 0:
-            self.color = (3, 1, 231) 
+
+            else:
+                front = self.now_number - 3
+                end = self.now_number + 3
+                front = max(0, front)
+                end = min(end, len(self.right_hand) - 1)
+
+                if self.now_number == len(self.right_hand) - 1:
+                    if self.status != "game_over":
+                        self.status = "game_over"
+                        # self.gameover = True
+                        self.end_time = time.time()
+
+                elif self.now_number == 0:
+                    if self.binarization_arr[0][self.x][self.y]:
+                        if self.begin_time == 0:
+                            self.begin_time = time.time()
+                        self.now_number = 1
+                        self.status = "playing"
+
+                elif self.status == 'playing':
+                    is_out_of_bounds = True
+                    for i in range(end, front - 1, -1):
+                        if self.binarization_arr[i][self.x][self.y]:
+                            self.now_number = i
+                            is_out_of_bounds = False
+                            break
+
+                    if is_out_of_bounds == True:
+                        self.now_number = 0
+                        self.outpipe = True
+                        self.outtime = 20
+                        self.status = "prepare_begin"
+
+            if self.outtime > 0:
+                self.color = (3, 1, 231) 
 
     def draw(self, results, image):
         def draw_pipe(image):  # image,coor_a, coor_b, index, open_save

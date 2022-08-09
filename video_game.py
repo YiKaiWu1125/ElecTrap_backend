@@ -19,7 +19,8 @@ class VideoGame(BaseVideoGame):
             if not ret or len(self.right_hand) >= self.level_max:
                 self.reading = False
                 self.cap.release()
-                return super().capture(flip)
+                return super().capture(not flip)
+            self.read_video = False
             self.h, self.w = image.shape[:2]
             image.flags.writeable = False
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

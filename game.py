@@ -25,7 +25,6 @@ class Game:
         self.solution = Solution(body)
         self.outtime = 0
 
-
     def capture(self, flip=False):
         if not hasattr(self, 'image'):
             raise AttributeError("No image")
