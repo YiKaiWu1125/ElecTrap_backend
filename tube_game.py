@@ -8,6 +8,8 @@ from game import Game
 class TubeGame(Game):
     def __init__(self, body='hands'):
         self.reset(body)
+        self.outpipe_img = cv2.imread(
+            'static/images/fail.png', cv2.IMREAD_UNCHANGED)
 
     def reset(self, body):
         super().reset(body)
@@ -35,6 +37,7 @@ class TubeGame(Game):
                     self.print_string = 'successful'
                 if not(50 <= self.x <= 600 and 150 + self.run <= self.y <= 200 + self.run):
                     self.outpipe = True
+                    self.outtime = 20
                     self.status = 'prepare_begin'
                     self.r_string = 'Fail <again>'
             if self.status in ['prepare_begin', 'playing'] and self.begin_time != 0:
@@ -42,23 +45,27 @@ class TubeGame(Game):
                     str(int(time.time() - self.begin_time)) + ">"
         elif self.status == 'playing':
             self.outpipe = True
+            self.outtime = 20
             self.status = 'prepare_begin'
             self.r_string = 'Fail <again>'
 
     def draw(self, results, image):
         image = super().draw(results, image)
         if self.x > 0.0 and self.y > 0.0:
-          col = 255
-          if self.status == 'playing':
-              col = 20
-          else:
-              col = 175
-          cv2.rectangle(image, (self.x - 10, self.y - 10),
-                        (self.x + 10, self.y + 10), (0, 0, col), 5)   # 畫出觸碰區
+            col = 255
+            if self.status == 'playing':
+                col = (0,0,20)
+            else:
+                col = (0,0,175)
+            cv2.rectangle(image, (self.x - 10, self.y - 10),
+                        (self.x + 10, self.y + 10), col, 5)   # 畫出觸碰區
 
         if self.status != "game_over":
+            col = (50, 50, 50 )
+            if self.status == 'playing':
+                col = (0, 250, 250)
             cv2.rectangle(image, (50, 150 + int(self.run)), (600, 200 + int(self.run)),
-                          (0, 0, 255), 5)   # 畫出電管
+                          col, 5)   # 畫出電管
         if self.status == 'prepare_begin':
             cv2.rectangle(image, (50, 150 + int(self.run)), (100, 200 + int(self.run)),
                           (0, 255, 0), 5)   # 畫出起始位置框
@@ -73,5 +80,11 @@ class TubeGame(Game):
                         (0, 150), cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)  # 檢視成績
             cv2.putText(image, "<Game over>", (0, 250),
                         cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+        if self.outtime > 0:
+            image = self.draw_outpipe(image)
         image = cv2.resize(image, (1280, 720))
         return cv2.imencode('.jpg', image)[1].tobytes()
+
+    def draw_outpipe(self,image):
+        image = cv2.addWeighted(image, 0.4, self.outpipe_img, 0.6, 0)
+        return image

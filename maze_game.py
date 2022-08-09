@@ -23,8 +23,12 @@ class MazeGame(Game):
         self.maze_img = cv2.imread(
             'static/images/' + self.level + '.png', cv2.IMREAD_UNCHANGED)
         self.show_img = self.maze_img.copy()
-        self.show_img = remove_background(self.show_img)
-
+        #self.show_img = remove_background(self.show_img)
+        self.outpipe_img = cv2.imread(
+            'static/images/outpipe_' + self.level + '.png', cv2.IMREAD_UNCHANGED)
+        self.playing_img = cv2.imread(
+            'static/images/playing_' + self.level + '.png', cv2.IMREAD_UNCHANGED)
+        
     def calc(self, results):
         def is_in_begin(x, y):
             if 15 < x < 65 and 15 < y < 65:
@@ -55,9 +59,11 @@ class MazeGame(Game):
             elif self.status == 'playing':
                 if is_touched(self.x, self.y):
                     self.outpipe = True
+                    self.outtime = 10
                     self.status = 'prepare_begin'
-        elif self.status != 'game_over':
+        elif self.status == 'playing':
             self.status = 'prepare_begin'
+            self.outtime = 10
 
     def draw(self, results, image):
         image = super().draw(results, image)
@@ -67,7 +73,12 @@ class MazeGame(Game):
             image = cv2.rectangle(image, (self.x - 5, self.y - 5),
                                   (self.x + 5, self.y + 5), (0, 0, 255), 5)   # 畫出手的位置
         if self.status != 'game_over':
-            image = cv2.addWeighted(image, 0.8, self.show_img, 0.2, 0)
+            if self.outtime > 0:
+                image = cv2.addWeighted(image, 0.3, self.outpipe_img, 0.7, 0)
+            elif self.status == 'playing':
+                image = cv2.addWeighted(image, 0.6, self.playing_img, 0.4, 0)
+            else:
+                image = cv2.addWeighted(image, 0.6, self.show_img, 0.4, 0)
         if self.status == 'prepare_begin':
             # 畫出起始位置框
             image = cv2.rectangle(image, (15, 15), (65, 65),
