@@ -15,7 +15,7 @@ class BaseVideoGame(Game):
         super().reset(body)
         self.right_hand = []
         self.reading = True
-        self.now_number = 0  # TODO: What is that mean?
+        self.now_number = 0  # 紀錄玩家這關當前的過關進度 當now_number == len(right_hand)-1 為抵達終點
         self.level = level
         self.body = body
         self.half_track_width = 50
@@ -55,15 +55,14 @@ class BaseVideoGame(Game):
                     self.status = "playing"
 
             else:
-                # TODO: Rename k to something else
-                k = True
+                is_out_of_bounds = True
                 for i in range(end, front - 1, -1):
                     if self.binarization_arr[i][self.x][self.y]:
                         self.now_number = i
-                        k = False
+                        is_out_of_bounds = False
                         break
 
-                if k == True:
+                if is_out_of_bounds == True:
                     self.now_number = 0
                     self.out_pipe = True
                     self.status = "prepare_begin"
