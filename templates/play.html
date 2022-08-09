@@ -40,7 +40,7 @@
           <div class="col"></div>
           {% for n in range(5) %}
             <div class="col-1">
-              <img id="heart{{n}}" src="{{ url_for('static', filename='/images/heart.png') }}" width="80" height="80" onclick="heartBroken(this);">
+              <img id="heart{{n}}" src="{{ url_for('static', filename='/images/heart.png') }}" width="80" height="80" >
             </div>
           {% endfor %}
           <div class="col"></div>
