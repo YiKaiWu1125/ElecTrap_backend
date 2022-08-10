@@ -37,7 +37,7 @@ class VideoGame(BaseVideoGame):
         image = super().video_draw(
             results, image) if self.reading else super().draw(results, image)
         if self.life <= 0:
-                image = cv2.putText(image, "you are lose", (0, 150),
+                image = cv2.putText(image, "you lose", (0, 150),
                             cv2.FONT_HERSHEY_PLAIN, 5, (42, 82, 254), 3)
         image = cv2.resize(image, (1280, 720))
         return cv2.imencode('.jpg', image)[1].tobytes()

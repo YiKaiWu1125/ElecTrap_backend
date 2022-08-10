@@ -25,9 +25,9 @@ class MazeGame(Game):
         self.show_img = self.maze_img.copy()
         #self.show_img = remove_background(self.show_img)
         self.outpipe_img = cv2.imread(
-            'static/images/outpipe_' + self.level + '.png', cv2.IMREAD_UNCHANGED)
+            f'static/images/outpipe_{self.level}.png', cv2.IMREAD_UNCHANGED)
         self.playing_img = cv2.imread(
-            'static/images/playing_' + self.level + '.png', cv2.IMREAD_UNCHANGED)
+            f'static/images/playing_{self.level}.png', cv2.IMREAD_UNCHANGED)
         
     def calc(self, results):
         def is_in_begin(x, y):
@@ -67,13 +67,13 @@ class MazeGame(Game):
             self.outtime = 10
             self.status = 'prepare_begin'
             self.life -= 1
+        if self.life <= 0 and self.status != 'game_over':
+                self.gameover = True
+                self.status = "game_over"
 
     def draw(self, results, image):
         image = super().draw(results, image)
         if self.life <= 0:
-            if self.status != 'game_over':
-                self.gameover = True
-                self.status = "game_over"
             image = cv2.putText(image, "<Game over>", (0, 250),
                             cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
             image = cv2.putText(image, "you are lose", (0, 150),

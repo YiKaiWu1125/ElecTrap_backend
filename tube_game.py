@@ -50,13 +50,13 @@ class TubeGame(Game):
             self.life -= 1
             self.status = 'prepare_begin'
             self.r_string = 'Fail <again>'
+        if self.life <= 0 and self.status != 'game_over':
+                self.gameover = True
+                self.status = "game_over"
 
     def draw(self, results, image):
         image = super().draw(results, image)
         if self.life <= 0:
-            if self.status != 'game_over':
-                self.gameover = True
-                self.status = "game_over"
             image = cv2.putText(image, "<Game over>", (0, 250),
                             cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
             image = cv2.putText(image, "you are lose", (0, 150),
@@ -92,10 +92,6 @@ class TubeGame(Game):
                 cv2.putText(image, "<Game over>", (0, 250),
                             cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
             if self.outtime > 0:
-                image = self.draw_outpipe(image)
+                image = cv2.addWeighted(image, 0.4, self.outpipe_img, 0.6, 0) # draw_outpipe
         image = cv2.resize(image, (1280, 720))
         return cv2.imencode('.jpg', image)[1].tobytes()
-
-    def draw_outpipe(self,image):
-        image = cv2.addWeighted(image, 0.4, self.outpipe_img, 0.6, 0)
-        return image

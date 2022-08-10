@@ -45,7 +45,7 @@ class Solution:
                     self.mp_drawing_styles.get_default_hand_landmarks_style(),
                     self.mp_drawing_styles.get_default_hand_connections_style()
                 )
-        elif self.body == 'foot' or self.body == 'head' or self.body == 'elbow':
+        elif self.body in ['foot', 'head', 'elbow']:
             self.mp_drawing.draw_landmarks(
                 image,
                 results.pose_landmarks,
