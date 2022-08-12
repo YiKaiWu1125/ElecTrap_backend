@@ -26,18 +26,24 @@ class BattleGame(BaseVideoGame):
             image = super().video_draw(results, image)
             image = cv2.putText(image, f"It's player {self.player1}'s turn to draw the maze",
                                 (0, 60), cv2.FONT_HERSHEY_PLAIN, 5, (60, 25, 240), 3)
-        else:
+        else: 
             image = super().draw(results, image)
-            if self.status == "game_over":
-                self.reset_time -= 1
-                if self.reset_time == 0:
-                    k = self.player1
-                    self.player1 = self.player2
-                    self.player2 = k
-                    self.reading = True
-                    self.reset(self.body, self.level)
+            if self.life <= 0:
+                image = cv2.putText(image, f"player {self.player1}'s are win", (0, 150),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (42, 82, 254), 3)
+            else:
+                if self.status == "game_over":
+                    self.reset_time -= 1
+                    if self.reset_time == 0:
+                        k = self.player1
+                        self.player1 = self.player2
+                        self.player2 = k
+                        self.reading = True
+                        self.life = 5
+                        self.heart_reset = True
+                        self.reset(self.body, self.level)
 
-            image = cv2.putText(image, "It's player " + str(self.player2) +
+                image = cv2.putText(image, "It's player " + str(self.player2) +
                                 "'s turn to solve the problem", (200, 60), cv2.FONT_HERSHEY_PLAIN, 5, (60, 25, 240), 3)
 
         image = cv2.resize(image, (1280, 720))
