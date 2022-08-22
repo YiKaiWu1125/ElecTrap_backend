@@ -30,6 +30,8 @@ class Solution:
             landmark = results.pose_landmarks.landmark[31]
         elif self.body == 'head':
             landmark = results.pose_landmarks.landmark[0]
+        elif self.body == 'elbow':
+            landmark = results.pose_landmarks.landmark[13]
         # 當為(-1,-1)時，代表偵測部位已超出鏡頭視野
         return limit(landmark.x, w, landmark.y, h)
 
@@ -43,7 +45,7 @@ class Solution:
                     self.mp_drawing_styles.get_default_hand_landmarks_style(),
                     self.mp_drawing_styles.get_default_hand_connections_style()
                 )
-        elif self.body == 'foot' or self.body == 'head':
+        elif self.body in ['foot', 'head', 'elbow']:
             self.mp_drawing.draw_landmarks(
                 image,
                 results.pose_landmarks,
@@ -55,7 +57,7 @@ class Solution:
     def processor(self):
         if self.body == 'hands':
             return Solution.HANDS
-        elif self.body == 'head' or self.body == 'foot':
+        elif self.body == 'head' or self.body == 'foot' or self.body == 'elbow':
             return Solution.POSE
 
     @property
@@ -66,7 +68,7 @@ class Solution:
     def body(self, new_mode):
         if new_mode == 'hands':
             self.landmarks_name = 'multi_hand_landmarks'
-        elif new_mode == 'foot' or new_mode == 'head':
+        elif new_mode == 'foot' or new_mode == 'head' or new_mode == 'elbow':
             self.landmarks_name = 'pose_landmarks'
         else:
             raise ValueError(f'No such type: "{new_mode}"')

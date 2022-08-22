@@ -87,7 +87,9 @@ def gen(camera):
             socketio.emit('gameover', {'data': 'gameover'})
         if camera.get_game().check_outpipe():
             socketio.emit('out_pipe', {'data': 'out_pipe'})
-            print("out_pipe")
+        if camera.get_game().check_heart_reset():
+            socketio.emit('heart_reset', {'data': 'heart_reset'})
+            print("heart reset.")
         yield b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n--frame\r\n'
 
 

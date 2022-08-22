@@ -19,59 +19,71 @@ class BaseVideoGame(Game):
         self.level = level
         self.body = body
         self.half_track_width = 50
-        self.level_max = 100
+        self.level_max = 500
+        self.color = (100 ,100 ,100)
         self.binarization_arr = np.zeros(
             self.level_max * 1930 * 1090).reshape((self.level_max, 1930, 1090))
 
     def calc(self, results):
         self.x = self.y = -1
-        if getattr(results, self.solution.landmarks_name):
-            self.x, self.y = self.solution.get_landmarks(
-                self.w, self.h, results)
+        self.color = (100 ,100 ,100)
+        if not self.reading:
+            if getattr(results, self.solution.landmarks_name):
+                self.x, self.y = self.solution.get_landmarks(
+                    self.w, self.h, results)
 
-        if self.x == -1 and self.y == -1:
-            if self.status == "playing":
-                self.now_number = 0
-                self.out_pipe = True
-                self.status = "prepare_begin"
-
-        else:
-            front = self.now_number - 5
-            end = self.now_number + 5
-            front = max(0, front)
-            end = min(end, len(self.right_hand) - 1)
-
-            if self.now_number == len(self.right_hand) - 1:
-                if self.status != "game_over":
-                    self.status = "game_over"
-                    # self.gameover = True
-                    self.end_time = time.time()
-
-            elif self.now_number == 0:
-                if self.binarization_arr[0][self.x][self.y]:
-                    if self.begin_time == 0:
-                        self.begin_time = time.time()
-                    self.now_number = 1
-                    self.status = "playing"
+            if self.x == -1 and self.y == -1:
+                if self.status == "playing":
+                    self.now_number = 0
+                    self.outpipe = True
+                    self.life -= 1
+                    self.outtime = 20
+                    self.status = "prepare_begin"
 
             else:
-                is_out_of_bounds = True
-                for i in range(end, front - 1, -1):
-                    if self.binarization_arr[i][self.x][self.y]:
-                        self.now_number = i
-                        is_out_of_bounds = False
-                        break
+                front = self.now_number - 3
+                end = self.now_number + 3
+                front = max(0, front)
+                end = min(end, len(self.right_hand) - 1)
 
-                if is_out_of_bounds == True:
-                    self.now_number = 0
-                    self.out_pipe = True
-                    self.status = "prepare_begin"
+                if self.now_number == len(self.right_hand) - 1:
+                    if self.status != "game_over":
+                        self.status = "game_over"
+                        # self.gameover = True
+                        self.end_time = time.time()
+
+                elif self.now_number == 0:
+                    if self.binarization_arr[0][self.x][self.y]:
+                        if self.begin_time == 0:
+                            self.begin_time = time.time()
+                        self.now_number = 1
+                        self.status = "playing"
+
+                elif self.status == 'playing':
+                    is_out_of_bounds = True
+                    for i in range(end, front - 1, -1):
+                        if self.binarization_arr[i][self.x][self.y]:
+                            self.now_number = i
+                            is_out_of_bounds = False
+                            break
+
+                    if is_out_of_bounds == True:
+                        self.now_number = 0
+                        self.outpipe = True
+                        self.life -= 1
+                        self.outtime = 20
+                        self.status = "prepare_begin"
+
+            if self.outtime > 0:
+                self.color = (3, 1, 231) 
 
     def draw(self, results, image):
         def draw_pipe(image):  # image,coor_a, coor_b, index, open_save
+            image = self.draw_circle(image)
             for i in range(len(self.right_hand) - 1, 0, -1):
                 image = self.draw_and_save_circle_link_poly(image, i, 0)
-            image = self.draw_circle(image)
+            image = cv2.circle(image, (self.right_hand[self.now_number][0], self.right_hand[self.now_number]
+                           [1]), self.half_track_width, (255, 255, 255), -1,) # 畫出玩家須前往的方向(小白球)
             return image
         image = super().draw(results, image)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
@@ -79,44 +91,52 @@ class BaseVideoGame(Game):
         if len(self.right_hand) == 0:
             return cv2.imencode('.jpg', image)[1].tobytes()
 
-        if self.status != "game_over":
-            image = draw_pipe(image)  # 畫出電管
+        if self.life <= 0 :
+            if self.status != 'game_over':
+                self.gameover = True
+                self.status = "game_over"
+            image = cv2.putText(image, "<Game over>", (0, 250),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
 
-        if self.status == "prepare_begin":
-            image = cv2.circle(
-                image,
-                (self.right_hand[0][0], self.right_hand[0][1]),
-                self.half_track_width,
-                (255, 0, 0),
-                -1,
-            )  # 畫出起始位置框
+        else:
+            if self.status != "game_over":
+                image = draw_pipe(image)  # 畫出電管
 
-        if self.status == "playing":
-            cv2.circle(
-                image,
-                (self.right_hand[len(self.right_hand) - 1][0],
-                 self.right_hand[len(self.right_hand) - 1][1]),
-                self.half_track_width,
-                (255, 0, 0),
-                -1,
-            )  # 畫出終止位置框
+            if self.status == "prepare_begin":
+                image = cv2.circle(
+                    image,
+                    (self.right_hand[0][0], self.right_hand[0][1]),
+                    self.half_track_width,
+                    (255, 0, 0),
+                    -1,
+                )  # 畫出起始位置框
 
-        if self.status == "game_over":
-            cv2.putText(
-                image,
-                "score:" + str(int(self.end_time - self.begin_time)) + " s.",
-                (0, 150),
-                cv2.FONT_HERSHEY_PLAIN,
-                5,
-                (260, 25, 240),
-                3,
-            )  # 檢視成績
-            cv2.putText(image, "<Game over>", (0, 250),
-                        cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+            if self.status == "playing":
+                cv2.circle(
+                    image,
+                    (self.right_hand[len(self.right_hand) - 1][0],
+                     self.right_hand[len(self.right_hand) - 1][1]),
+                    self.half_track_width,
+                    (255, 0, 0),
+                    -1,
+                )  # 畫出終止位置框
 
-        if self.x != -1 and self.y != -1:
-            image = cv2.rectangle(image, (self.x - 5, self.y - 5),
-                                  (self.x + 5, self.y + 5), (0, 0, 255), 5)   # 畫出手的位置
+            if self.status == "game_over":
+                cv2.putText(
+                    image,
+                    "score:" + str(int(self.end_time - self.begin_time)) + " s.",
+                    (0, 150),
+                    cv2.FONT_HERSHEY_PLAIN,
+                    5,
+                    (260, 25, 240),
+                    3,
+                )  # 檢視成績
+                cv2.putText(image, "<Game over>", (0, 250),
+                            cv2.FONT_HERSHEY_PLAIN, 5, (260, 25, 240), 3)
+
+            if self.x != -1 and self.y != -1:
+                image = cv2.rectangle(image, (self.x - 5, self.y - 5),
+                                      (self.x + 5, self.y + 5), (0, 0, 255), 5)   # 畫出手的位置
         return image
 
 
@@ -225,26 +245,9 @@ class BaseVideoGame(Game):
         y = int(coor_b[1] + (k * w))
         link_dot.append([x, y])
 
-        # draw line
-        if open_save == 0 and abs(index - self.now_number < 3):
-            cv2.line(
-                image,
-                (link_dot[0][0], link_dot[0][1]),
-                (link_dot[3][0], link_dot[3][1]),
-                (0, 0, 0),
-                5,
-            )
-            cv2.line(
-                image,
-                (link_dot[1][0], link_dot[1][1]),
-                (link_dot[2][0], link_dot[2][1]),
-                (0, 0, 0),
-                5,
-            )
-
         # full draw
         contours = np.array(link_dot)
-        cv2.fillPoly(image, pts=[contours], color=(0, 225, 225))
+        cv2.fillPoly(image, pts=[contours], color=self.color)
 
         # save poly in binarization_arr(need save ? open_save = 1 : open_save = 0)
         if open_save == 1:
@@ -261,19 +264,31 @@ class BaseVideoGame(Game):
                     if self.binarization_arr[index][i][j] == 0:
                         if is_in_poly([i, j], link_dot) == True:
                             self.binarization_arr[index][i][j] = 1
+
+         # draw line
+        if open_save == 0 and index - self.now_number < 3 and index - self.now_number >= 0:
+            cv2.line(
+                image,
+                (link_dot[0][0], link_dot[0][1]),
+                (link_dot[3][0], link_dot[3][1]),
+                (0, 255, 255),
+                5,
+            )
+            cv2.line(
+                image,
+                (link_dot[1][0], link_dot[1][1]),
+                (link_dot[2][0], link_dot[2][1]),
+                (0, 255, 255),
+                5,
+            )
+
         return image
 
     def draw_circle(self, image):
         if len(self.right_hand) == 0:
             return image
         for i in range(len(self.right_hand) - 1, -1, -1):
-            if self.now_number == i:
-                col = [255, 255, 255]
-            else:
-                col = [0, 225, 225]
             image = cv2.circle(
-                image, (self.right_hand[i][0], self.right_hand[i][1]), self.half_track_width, (col[0], col[1], col[2]), -1,)
-        col = [255, 255, 255]
-        image = cv2.circle(image, (self.right_hand[self.now_number][0], self.right_hand[self.now_number]
-                           [1]), self.half_track_width, (col[0], col[1], col[2]), -1,)
+                image, (self.right_hand[i][0], self.right_hand[i][1]), self.half_track_width, self.color, -1,)
         return image
+        
