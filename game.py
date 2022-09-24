@@ -79,3 +79,5 @@ class Game:
     def check_heart_reset(self):
         return self.check_something('heart_reset')
     
+    def get_life(self):
+        return 'heart'+str(self.life) 

@@ -86,7 +86,8 @@ def gen(camera):
         if camera.get_game().check_gameover():
             socketio.emit('gameover', {'data': 'gameover'})
         if camera.get_game().check_outpipe():
-            socketio.emit('out_pipe', {'data': 'out_pipe'})
+            nowlife = camera.get_game().get_life()
+            socketio.emit('out_pipe', {'data': nowlife})
         if camera.get_game().check_heart_reset():
             socketio.emit('heart_reset', {'data': 'heart_reset'})
             print("heart reset.")
